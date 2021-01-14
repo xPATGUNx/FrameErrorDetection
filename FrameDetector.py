@@ -6,7 +6,7 @@ from collections import Counter
 import typing
 
 
-def qr_code_detection(video_file_path: str):
+def qr_code_detection(video_file_path: str, expected_amount_of_frames):
     cap = cv.VideoCapture(video_file_path)
     timestr = time.strftime("%Y %m %d-%H%M%S")
     scan_data_name = ('QR Scan Results ' + timestr + '.txt')
@@ -43,7 +43,7 @@ def qr_code_detection(video_file_path: str):
     # print('Scan completed after ' + str(end - start) + ' seconds.')
     print('"' + scan_data_name + '"' + ' has been created.')
     # ToDo: replace magic number
-    frame_counter(frame_index_list, 180)
+    frame_counter(frame_index_list, expected_amount_of_frames)
 
 
 def qr_code_scanner(obj):
@@ -61,6 +61,6 @@ def frame_counter(scan_list: list, amount_of_frames):
 
 
 if __name__ == '__main__':
-    # qr_code_detection('Video/No_QR_Test.mp4')
-    # qr_code_detection('Video/QRCodeScreenCap.mp4')
-    qr_code_detection('Video/Mac Book Pro Capture.mp4')
+    # qr_code_detection('Video/No_QR_Test.mp4', 180)
+    # qr_code_detection('Video/QRCodeScreenCap.mp4', 180)
+    qr_code_detection('Video/Mac Book Pro Capture.mp4', 180)
