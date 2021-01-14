@@ -81,4 +81,4 @@ def delete_temp_images():
 if __name__ == '__main__':
     render_test_video(video_file_path='Video/TestVideo.mp4', new_video_file_name='Video/TestVideoNew.mp4',
                       codec=cv.VideoWriter_fourcc(*'mp4v'))
-    # render_test_video(video_file_path='Video/TestVideo.mp4', new_video_file_name='Video/TestVideoNewAuto.mp4')
+    # render_test_video(video_file_name='Video/TestVideo.mp4', new_video_file_name='Video/TestVideoNewAuto.mp4')
