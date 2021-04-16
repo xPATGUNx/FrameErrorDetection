@@ -55,9 +55,9 @@ def test_data_file_writer(scan_list: list, amount_of_frames, file_name):
     scan_data = open(scan_data_dir, 'w')
     scan_data.write('Detected frames for file "' + file_name + '":\n')
 
-    for current_frame in range(amount_of_frames + 1):
-        occurrance = scan_list.count(current_frame)
-        scan_data.write('Frame ' + str(current_frame) + ' occurred ' + str(occurrance) + ' times.\n')
+    for current_frame in range(1, amount_of_frames + 1):
+        occurrence = scan_list.count(current_frame)
+        scan_data.write('Frame ' + str(current_frame) + ' occurred ' + str(occurrence) + ' times.\n')
     not_readable_frames = scan_list.count('QR code was not readable.')
     scan_data.write('QR code was not readable for ' + str(not_readable_frames) + ' frames.')
     scan_data.close()
