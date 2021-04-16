@@ -29,12 +29,14 @@ def qr_code_detection(video_file_name: str, expected_amount_of_frames):
         else:
             break
 
-    print(frame_index_list)
+    # print(frame_index_list)
     end = time.time()
     cap.release()
     cv.destroyAllWindows()
     # print('Scan completed after ' + str(end - start) + ' seconds.')
     test_data_file_writer(frame_index_list, expected_amount_of_frames, video_file_name)
+    assert_frames_for_occurrences(frame_index_list, expected_amount_of_frames)
+    return frame_index_list
 
 
 def qr_code_scanner(obj):
@@ -60,6 +62,18 @@ def test_data_file_writer(scan_list: list, amount_of_frames, file_name):
     scan_data.write('QR code was not readable for ' + str(not_readable_frames) + ' frames.')
     scan_data.close()
     print('"' + scan_data_name + '"' + ' has been created.')
+
+
+def assert_frames_for_occurrences(scan_list: list, amount_of_frames):
+    list_of_problematic_frames = []
+    for current_frame in range(1, amount_of_frames + 1):
+        occurrence = scan_list.count(current_frame)
+        if occurrence != 1:
+            list_of_problematic_frames.append('Frame ' + str(current_frame) + ' occurred ' + str(occurrence) + ' times.')
+    if len(list_of_problematic_frames) > 0:
+        raise Exception('Warning! A problem has been detected: ' + str(list_of_problematic_frames))
+    else:
+        print('No Frame inconsistencies detected.')
 
 
 if __name__ == '__main__':
