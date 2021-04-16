@@ -33,7 +33,9 @@ def qr_code_detection(video_file_name: str, expected_amount_of_frames):
     end = time.time()
     cap.release()
     cv.destroyAllWindows()
-    # print('Scan completed after ' + str(end - start) + ' seconds.')
+    print('Scan completed after ' + str(end - start) + ' seconds.')
+
+    # TODO: Extract these steps into another method
     test_data_file_writer(frame_index_list, expected_amount_of_frames, video_file_name)
     assert_frames_for_occurrences(frame_index_list, expected_amount_of_frames)
     return frame_index_list
