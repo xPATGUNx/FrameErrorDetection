@@ -5,7 +5,7 @@ import cv2 as cv
 from pyzbar.pyzbar import decode
 
 
-def qr_code_detection(video_file_name: str, expected_amount_of_frames):
+def qr_code_detection(video_file_name: str):
     cap = cv.VideoCapture('Video/' + video_file_name)
     frame_index_list = []
 
@@ -32,10 +32,6 @@ def qr_code_detection(video_file_name: str, expected_amount_of_frames):
     cap.release()
     cv.destroyAllWindows()
     print('Scan completed after ' + str(end - start) + ' seconds.')
-
-    # TODO: Extract these steps into another method
-    test_data_file_writer(frame_index_list, expected_amount_of_frames, video_file_name)
-    assert_frames_for_occurrences(frame_index_list, expected_amount_of_frames)
     return frame_index_list
 
 
@@ -64,21 +60,62 @@ def test_data_file_writer(scan_list: list, amount_of_frames, file_name):
     print('"' + scan_data_name + '"' + ' has been created.')
 
 
-def assert_frames_for_occurrences(scan_list: list, amount_of_frames):
+def list_frames_for_occurrences(scan_list: list, amount_of_frames):
     list_of_problematic_frames = []
     for current_frame in range(1, amount_of_frames + 1):
         occurrence = scan_list.count(current_frame)
         if occurrence != 1:
-            list_of_problematic_frames.append('Frame ' + str(current_frame) + ' occurred ' + str(occurrence) + ' times.')
-    if len(list_of_problematic_frames) > 0:
-        raise Exception('Warning! A problem has been detected: ' + str(list_of_problematic_frames))
-    else:
-        print('No Frame inconsistencies detected.')
+            list_of_problematic_frames.append('Frame ' + str(current_frame) +
+                                              ' occurred ' + str(occurrence) + ' times.')
+    return list_of_problematic_frames
+    # if len(list_of_problematic_frames) > 0:
+    #     raise Exception('Warning! A problem has been detected: ' + str(list_of_problematic_frames))
+    # else:
+    #     print('No Frame inconsistencies detected.')
+
+
+def frame_drop_detection(video_file_name: str, expected_ammount_of_frames: int):
+    video_frames = qr_code_detection(video_file_name)
+    test_data_file_writer(video_frames, expected_ammount_of_frames, video_file_name)
+    list_of_detected_frame_drops = list_frames_for_occurrences(video_frames, expected_ammount_of_frames)
+    return list_of_detected_frame_drops
 
 
 if __name__ == '__main__':
     # qr_code_detection('No_QR_Test.mp4', 180)
     # qr_code_detection('QRCodeScreenCap.mp4', 180)
-    qr_code_detection('MacBook Pro QuickTime Capture.mp4', 180)
-    qr_code_detection('MacBook Pro Cubase  Capture 01.mp4', 180)
-    qr_code_detection('MacBook Pro Cubase  Capture 02.mp4', 180)
+    # qr_code_detection('MacBook Pro QuickTime Capture.mp4', 180)
+    # qr_code_detection('MacBook Pro Cubase  Capture 01.mp4', 180)
+    # qr_code_detection('MacBook Pro Cubase  Capture 02.mp4', 180)
+    # qr_code_detection('MacBook Pro QuickTime 60 FPS.mp4', 150)
+
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 60 FPS Cubase 60 FPS Capture 1.mp4', 150)
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 60 FPS Cubase 60 FPS Capture 2.mp4', 150)
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 59.97 FPS Cubase 60 FPS Capture 1.mp4', 150)
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 50 FPS Cubase 60 FPS Capture 1.mp4', 150)
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 30 FPS Cubase 60 FPS Capture 1.mp4', 150)
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 29.97 FPS Cubase 60 FPS Capture 1.mp4', 150)
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 25 FPS Cubase 60 FPS Capture 1.mp4', 150)
+    # qr_code_detection('Intensity Pro 4K Captures/MacBook Pro 24 FPS Cubase 60 FPS Capture 1.mp4', 150)
+
+    # qr_code_detection('LG4K/LG4K 30FPS Video 60FPS Capture.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 60FPS Video 60FPS Capture.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 60 FPS Video 120 FPS Capture.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 60FPS VLC 120FPS OBS.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 60FPS VLC 60FPS OBS.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 59FPS VLC 59FPS OBS.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 59FPS VLC 59FPS OBS V2.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 50FPS VLC 50FPS OBS.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 30FPS VLC 30FPS OBS.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 29FPS VLC 29FPS OBS.mp4', 150)
+    # qr_code_detection('LG4K/LG4K 25FPS VLC 25FPS OBS.mp4', 150)
+
+    # qr_code_detection('Elgato/24 FPS.mp4', 150)
+    # qr_code_detection('Elgato/24 FPS new.mp4', 150)
+    # qr_code_detection('Elgato/25 FPS.mp4', 150)
+    # qr_code_detection('Elgato/29 FPS.mp4', 150)
+    # qr_code_detection('Elgato/29 fps new.mp4', 150)
+    # qr_code_detection('Elgato/30 FPS.mp4', 150)
+    # qr_code_detection('Elgato/50 FPS.mp4', 150)
+    # qr_code_detection('Elgato/59 FPS.mp4', 150)
+    frame_drop_detection('Elgato/60 FPS.mp4', 150)
