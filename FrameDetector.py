@@ -1,10 +1,8 @@
-import cv2 as cv
-import numpy as np
-from pyzbar.pyzbar import decode
-import time
-from collections import Counter
-import typing
 import os
+import time
+
+import cv2 as cv
+from pyzbar.pyzbar import decode
 
 
 def qr_code_detection(video_file_name: str, expected_amount_of_frames):
