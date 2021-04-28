@@ -68,10 +68,6 @@ def list_frames_for_occurrences(scan_list: list, amount_of_frames):
             list_of_problematic_frames.append('Frame ' + str(current_frame) +
                                               ' occurred ' + str(occurrence) + ' times.')
     return list_of_problematic_frames
-    # if len(list_of_problematic_frames) > 0:
-    #     raise Exception('Warning! A problem has been detected: ' + str(list_of_problematic_frames))
-    # else:
-    #     print('No Frame inconsistencies detected.')
 
 
 def frame_drop_detection(video_file_name: str, expected_ammount_of_frames: int):
