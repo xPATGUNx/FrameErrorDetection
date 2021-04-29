@@ -28,6 +28,9 @@ class ObsController:
     def set_profile(self, profile_name):
         self.web_socket.call(requests.SetCurrentProfile(profile_name))
 
+    def set_video_directory(self, *, path):
+        self.web_socket.call(requests.SetRecordingFolder(path))
+
 
 if __name__ == '__main__':
     obs = ObsController()
