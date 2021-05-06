@@ -1,13 +1,18 @@
 import unittest
-import FrameDetector
+from FrameDetector import FrameDetector
 
 
 class TestFrameDropDetection(unittest.TestCase):
     def test_videos_for_frame_drops(self):
         video = 'Elgato/60 FPS.mp4'
-        detected_frame_drops = FrameDetector.frame_drop_detection(video, 150)
+        expected_video_frames = 150
+        frame_detector = FrameDetector()
+        detected_frame_drops = frame_detector.frame_drop_detection(video, expected_video_frames)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_mkv_video_for_frame_drops(self):
+        video = 'Elgato/60 FPS.mkv'
+        expected_video_frames = 150
+        frame_detector = FrameDetector()
+        detected_frame_drops = frame_detector.frame_drop_detection(video, expected_video_frames)
+        self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))

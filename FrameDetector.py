@@ -5,76 +5,72 @@ import cv2 as cv
 from pyzbar.pyzbar import decode
 
 
-def __qr_code_detection(video_file_name: str):
-    cap = cv.VideoCapture('Video/' + video_file_name)
-    frame_index_list = []
+class FrameDetector:
+    def __qr_code_detection(self, video_file_path):
+        cap = cv.VideoCapture('Video/' + video_file_path)
+        frame_index_list = []
 
-    if not cap.isOpened():
-        print("Error opening video stream or file")
+        if not cap.isOpened():
+            print("Error opening video stream or file")
 
-    print('Scanning for frame IDs...')
-    start = time.time()
-    while cap.isOpened():
-
-        ret, frame = cap.read()
-
-        if ret:
-            text_data = str(__qr_code_scanner(frame))
-            if not text_data == 'None':
-                frame_index_list.append(int(text_data))
+        print('Scanning for frame IDs...')
+        start = time.time()
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                text_data = str(self.__qr_code_scanner(frame))
+                if not text_data == 'None':
+                    frame_index_list.append(int(text_data))
+                else:
+                    frame_index_list.append('QR code was not readable.')
             else:
-                frame_index_list.append('QR code was not readable.')
-        else:
-            break
+                break
+        end = time.time()
+        cap.release()
+        cv.destroyAllWindows()
+        print('Scan completed after ' + str(end - start) + ' seconds.')
+        return frame_index_list
 
-    # print(frame_index_list)
-    end = time.time()
-    cap.release()
-    cv.destroyAllWindows()
-    print('Scan completed after ' + str(end - start) + ' seconds.')
-    return frame_index_list
+    @staticmethod
+    def __qr_code_scanner(obj):
+        qr_code = decode(obj)
+        for code in qr_code:
+            data = code.data.decode('utf-8')
+            # print(data)
+            return data
 
+    @staticmethod
+    def __test_data_file_writer(scan_list: list, video_file_path, expected_amount_of_frames):
+        name_without_suffix = os.path.splitext(video_file_path)[0]
+        timestr = time.strftime("%Y %m %d-%H%M%S")
+        scan_data_name = (str(name_without_suffix) + ' Scan Results ' + timestr + '.txt')
+        scan_data_dir = ('Scan Results/' + scan_data_name)
+        scan_data = open(scan_data_dir, 'w')
+        scan_data.write('Detected frames for file "' + video_file_path + '":\n')
 
-def __qr_code_scanner(obj):
-    qr_code = decode(obj)
-    for code in qr_code:
-        data = code.data.decode('utf-8')
-        # print(data)
-        return data
+        for current_frame in range(1, expected_amount_of_frames + 1):
+            occurrence = scan_list.count(current_frame)
+            scan_data.write('Frame ' + str(current_frame) + ' occurred ' + str(occurrence) + ' times.\n')
+        not_readable_frames = scan_list.count('QR code was not readable.')
+        scan_data.write('QR code was not readable for ' + str(not_readable_frames) + ' frames.')
+        scan_data.close()
+        print('"' + scan_data_name + '"' + ' has been created.')
 
+    @staticmethod
+    def __list_frames_for_occurrences(scan_list: list, expected_amount_of_frames):
+        list_of_problematic_frames = []
+        for current_frame in range(1, expected_amount_of_frames + 1):
+            occurrence = scan_list.count(current_frame)
+            if occurrence != 1:
+                list_of_problematic_frames.append('Frame ' + str(current_frame) +
+                                                  ' occurred ' + str(occurrence) + ' times.')
+        return list_of_problematic_frames
 
-def __test_data_file_writer(scan_list: list, amount_of_frames, file_name):
-    name_without_suffix = os.path.splitext(file_name)[0]
-    timestr = time.strftime("%Y %m %d-%H%M%S")
-    scan_data_name = (str(name_without_suffix) + ' Scan Results ' + timestr + '.txt')
-    scan_data_dir = ('Scan Results/' + scan_data_name)
-    scan_data = open(scan_data_dir, 'w')
-    scan_data.write('Detected frames for file "' + file_name + '":\n')
-
-    for current_frame in range(1, amount_of_frames + 1):
-        occurrence = scan_list.count(current_frame)
-        scan_data.write('Frame ' + str(current_frame) + ' occurred ' + str(occurrence) + ' times.\n')
-    not_readable_frames = scan_list.count('QR code was not readable.')
-    scan_data.write('QR code was not readable for ' + str(not_readable_frames) + ' frames.')
-    scan_data.close()
-    print('"' + scan_data_name + '"' + ' has been created.')
-
-
-def __list_frames_for_occurrences(scan_list: list, amount_of_frames):
-    list_of_problematic_frames = []
-    for current_frame in range(1, amount_of_frames + 1):
-        occurrence = scan_list.count(current_frame)
-        if occurrence != 1:
-            list_of_problematic_frames.append('Frame ' + str(current_frame) +
-                                              ' occurred ' + str(occurrence) + ' times.')
-    return list_of_problematic_frames
-
-
-def frame_drop_detection(video_file_name: str, expected_ammount_of_frames: int):
-    video_frames = __qr_code_detection(video_file_name)
-    __test_data_file_writer(video_frames, expected_ammount_of_frames, video_file_name)
-    list_of_detected_frame_drops = __list_frames_for_occurrences(video_frames, expected_ammount_of_frames)
-    return list_of_detected_frame_drops
+    def frame_drop_detection(self, video_file_path: str, expected_amount_of_frames: int):
+        video_frames = self.__qr_code_detection(video_file_path)
+        self.__test_data_file_writer(video_frames, video_file_path, expected_amount_of_frames)
+        list_of_detected_frame_drops = self.__list_frames_for_occurrences(video_frames, expected_amount_of_frames)
+        return list_of_detected_frame_drops
 
 
 if __name__ == '__main__':
@@ -114,4 +110,6 @@ if __name__ == '__main__':
     # frame_drop_detection('Elgato/30 FPS.mp4', 150)
     # frame_drop_detection('Elgato/59 FPS.mp4', 150)
     # frame_drop_detection('Elgato/50 FPS.mp4', 150)
-    frame_drop_detection('Elgato/60 FPS.mp4', 150)
+    # frame_drop_detection('Elgato/60 FPS.mp4', 150)
+    frame_detector = FrameDetector()
+    frame_detector.frame_drop_detection('Elgato/60 FPS.mp4', 150)
