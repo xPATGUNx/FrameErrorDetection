@@ -7,7 +7,7 @@ from pyzbar.pyzbar import decode
 
 class FrameDetector:
     def __qr_code_detection(self, video_file_path):
-        cap = cv.VideoCapture('Video/' + video_file_path)
+        cap = cv.VideoCapture(video_file_path)
         frame_index_list = []
 
         if not cap.isOpened():
@@ -41,9 +41,9 @@ class FrameDetector:
 
     @staticmethod
     def __test_data_file_writer(scan_list: list, video_file_path, expected_amount_of_frames):
-        name_without_suffix = os.path.splitext(video_file_path)[0]
+        base_name = os.path.basename(video_file_path)
         timestr = time.strftime("%Y %m %d-%H%M%S")
-        scan_data_name = (str(name_without_suffix) + ' Scan Results ' + timestr + '.txt')
+        scan_data_name = ('Scan Results ' + timestr + str(base_name) + '.txt')
         scan_data_dir = ('Scan Results/' + scan_data_name)
         scan_data = open(scan_data_dir, 'w')
         scan_data.write('Detected frames for file "' + video_file_path + '":\n')
@@ -112,4 +112,4 @@ if __name__ == '__main__':
     # frame_drop_detection('Elgato/50 FPS.mp4', 150)
     # frame_drop_detection('Elgato/60 FPS.mp4', 150)
     frame_detector = FrameDetector()
-    frame_detector.frame_drop_detection('Elgato/60 FPS.mp4', 150)
+    frame_detector.frame_drop_detection('Video/Elgato/60 FPS.mp4', 150)
