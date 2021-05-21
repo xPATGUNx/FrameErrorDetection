@@ -6,7 +6,12 @@ from pyzbar.pyzbar import decode
 
 
 class FrameDetector:
-    def __qr_code_detection(self, video_file_path):
+    def __qr_code_detection(self, video_file_path: str):
+        """
+        Iterates over every video frame individually and checks its QR code for frame index.
+        :param video_file_path: A string of the path to a video that needs to be analysed.
+        :return: A list of every frame index.
+        """
         cap = cv.VideoCapture(video_file_path)
         frame_index_list = []
 
@@ -32,15 +37,26 @@ class FrameDetector:
         return frame_index_list
 
     @staticmethod
-    def __qr_code_scanner(obj):
-        qr_code = decode(obj)
+    def __qr_code_scanner(frame):
+        """
+        A simple QR-Code scanner.
+        :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
+        :return: Returns the encoded data from the QR-Code
+        """
+        qr_code = decode(frame)
         for code in qr_code:
             data = code.data.decode('utf-8')
             # print(data)
             return data
 
     @staticmethod
-    def __test_data_file_writer(scan_list: list, video_file_path, expected_amount_of_frames):
+    def __test_data_file_writer(scan_list: list, video_file_path: str, expected_amount_of_frames: int):
+        """
+        Generates a text file and fills it with data from the passed list.
+        :param scan_list: list of scanned frames
+        :param video_file_path: A string of the path to a video that needs to be analysed.
+        :param expected_amount_of_frames: An integer with the exact amount of expected video frames to check against.
+        """
         base_name = os.path.basename(video_file_path)
         timestr = time.strftime("%Y %m %d-%H%M%S")
         scan_data_name = ('Scan Results ' + timestr + str(base_name) + '.txt')
@@ -57,7 +73,13 @@ class FrameDetector:
         print('"' + scan_data_name + '"' + ' has been created.')
 
     @staticmethod
-    def __list_frames_for_occurrences(scan_list: list, expected_amount_of_frames):
+    def __list_video_frame_errors(scan_list: list, expected_amount_of_frames: int):
+        """
+        Every frame has to occure only once. Every anomaly gets listed by this function.
+        :param scan_list: list of scanned frames
+        :param expected_amount_of_frames: An integer with the exact amount of expected video frames to check against.
+        :return: Returns a list with all dropped or duplicated video frames.
+        """
         list_of_problematic_frames = []
         for current_frame in range(1, expected_amount_of_frames + 1):
             occurrence = scan_list.count(current_frame)
@@ -67,9 +89,15 @@ class FrameDetector:
         return list_of_problematic_frames
 
     def frame_drop_detection(self, video_file_path: str, expected_amount_of_frames: int):
+        """
+        Core function to detect frame drops & frame duplicates in a video file.
+        :param video_file_path: A string of the path to a video that needs to be analysed.
+        :param expected_amount_of_frames: An integer with the exact amount of expected video frames to check against.
+        :return: Returns a list with all dropped or duplicated video frames.
+        """
         video_frames = self.__qr_code_detection(video_file_path)
         self.__test_data_file_writer(video_frames, video_file_path, expected_amount_of_frames)
-        list_of_detected_frame_drops = self.__list_frames_for_occurrences(video_frames, expected_amount_of_frames)
+        list_of_detected_frame_drops = self.__list_video_frame_errors(video_frames, expected_amount_of_frames)
         return list_of_detected_frame_drops
 
 
