@@ -4,7 +4,6 @@ import time
 import cv2 as cv
 import pyzbar.pyzbar as pyzbar
 import numpy as np
-from typing import Tuple
 
 
 class FrameDetector:
@@ -16,7 +15,8 @@ class FrameDetector:
 
     def __find_position_of_qr_code(self):
         cap = cv.VideoCapture(self.video_file_path)
-
+        print('Scanning for QR Code location...')
+        start = time.time()
         if not cap.isOpened():
             print("Error opening video stream or file")
         while cap.isOpened():
@@ -27,7 +27,8 @@ class FrameDetector:
                 qr_code_coordinates = self.__qr_code_scanner(gray_frame, return_position=True)
                 if qr_code_coordinates is not None:
                     self.__qr_code_position = qr_code_coordinates
-                    print('Position of QR Code has been detected.')
+                    end = time.time()
+                    print('Position of QR Code has been detected after ' + str(end - start) + ' seconds.')
                     break
             else:
                 break
@@ -69,7 +70,7 @@ class FrameDetector:
         self.scan_list = frame_index_list
 
     @staticmethod
-    def __qr_code_scanner(frame, return_position: bool = False):
+    def __qr_code_scanner(frame: np.ndarray, return_position: bool = False):
         """
         A simple QR-Code scanner.
         :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
@@ -104,7 +105,7 @@ class FrameDetector:
         not_readable_frames = self.scan_list.count('QR code was not readable.')
         scan_data.write('QR code was not readable for ' + str(not_readable_frames) + ' frames.')
         scan_data.close()
-        print('"' + scan_data_name + '"' + ' has been created.')
+        print('"' + scan_data_name + '"' + ' has been created.\n')
 
     def __list_video_frame_errors(self):
         """
@@ -142,6 +143,5 @@ class FrameDetector:
     def crop_frame(self, frame: np.ndarray, margin: int = 0):
         x, y, w, h = self.__qr_code_position
         m = margin
-        # (height, width) = frame.shape[:2]
         cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
         return cropped_frame
