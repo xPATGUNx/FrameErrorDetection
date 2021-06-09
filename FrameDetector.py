@@ -133,6 +133,8 @@ class FrameDetector:
     def frame_drop_detection(self, crop_video: bool = True):
         """
         Core function to detect frame drops & frame duplicates in a video file.
+        :param crop_video: A boolean that toggles if the video is cropped to contain only the QR Code.
+        Enabling this will significantly improve scan speed.
         :return: Returns a list with all dropped or duplicated video frames.
         """
         self.__qr_code_detection(crop_video=crop_video)
@@ -141,6 +143,12 @@ class FrameDetector:
         return list_of_detected_frame_drops
 
     def crop_frame(self, frame: np.ndarray, margin: int = 0):
+        """
+        Crops current frame to only contain the QR Code.
+        :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
+        :param margin: An integer that manipulates the cropping margin.
+        :return: Returns a cropped version of the current video frame.
+        """
         x, y, w, h = self.__qr_code_position
         m = margin
         cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
