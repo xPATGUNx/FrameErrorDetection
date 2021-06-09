@@ -2,7 +2,9 @@ import os
 import time
 
 import cv2 as cv
-from pyzbar.pyzbar import decode
+import pyzbar.pyzbar as pyzbar
+import numpy as np
+from typing import Tuple
 
 
 class FrameDetector:
@@ -10,15 +12,36 @@ class FrameDetector:
         self.video_file_path = ''
         self.expected_amount_of_frames = 0
         self.scan_list = []
+        self.__qr_code_position = None
 
-    def __qr_code_detection(self):
+    def __find_position_of_qr_code(self):
+        cap = cv.VideoCapture(self.video_file_path)
+
+        if not cap.isOpened():
+            print("Error opening video stream or file")
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+                # print(self.__qr_code_scanner(gray_frame, return_position=True))
+                qr_code_coordinates = self.__qr_code_scanner(gray_frame, return_position=True)
+                if qr_code_coordinates is not None:
+                    self.__qr_code_position = qr_code_coordinates
+                    print('Position of QR Code has been detected.')
+                    break
+            else:
+                break
+        cap.release()
+        cv.destroyAllWindows()
+
+    def __qr_code_detection(self, crop_video: bool = True):
         """
         Iterates over every video frame individually and checks its QR code for frame index.
         :return: A list of every frame index.
         """
+        self.__find_position_of_qr_code()
         cap = cv.VideoCapture(self.video_file_path)
         frame_index_list = []
-
         if not cap.isOpened():
             print("Error opening video stream or file")
 
@@ -27,7 +50,12 @@ class FrameDetector:
         while cap.isOpened():
             ret, frame = cap.read()
             if ret:
-                text_data = str(self.__qr_code_scanner(frame))
+                if crop_video:
+                    video_frame = self.crop_frame(frame)
+                else:
+                    video_frame = frame
+                gray_frame = cv.cvtColor(video_frame, cv.COLOR_BGR2GRAY)
+                text_data = str(self.__qr_code_scanner(gray_frame))
                 if not text_data == 'None':
                     frame_index_list.append(int(text_data))
                 else:
@@ -41,17 +69,23 @@ class FrameDetector:
         self.scan_list = frame_index_list
 
     @staticmethod
-    def __qr_code_scanner(frame):
+    def __qr_code_scanner(frame, return_position: bool = False):
         """
         A simple QR-Code scanner.
         :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
         :return: Returns the encoded data from the QR-Code
         """
-        qr_code = decode(frame)
-        for code in qr_code:
-            data = code.data.decode('utf-8')
-            # print(data)
-            return data
+        if return_position:
+            qr_code = pyzbar.decode(frame)
+            for location in qr_code:
+                (x, y, w, h) = location.rect
+                return x, y, w, h
+        else:
+            qr_code = pyzbar.decode(frame)
+            for code in qr_code:
+                data = code.data.decode('utf-8')
+                # print(data)
+                return data
 
     def __test_data_file_writer(self):
         """
@@ -85,7 +119,7 @@ class FrameDetector:
                                                   ' occurred ' + str(occurrence) + ' times.')
         return list_of_problematic_frames
 
-    def set_parameters(self, video_file_path: str, expected_amount_of_frames: int):
+    def set_video_analysis_parameters(self, video_file_path: str, expected_amount_of_frames: int):
         """
         Sets all parameters needed to use frame drop detection on a desired video.
         :param video_file_path: A string of the video_file_path to a video that needs to be analysed.
@@ -95,12 +129,19 @@ class FrameDetector:
         self.video_file_path = video_file_path
         self.expected_amount_of_frames = expected_amount_of_frames
 
-    def frame_drop_detection(self):
+    def frame_drop_detection(self, crop_video: bool = True):
         """
         Core function to detect frame drops & frame duplicates in a video file.
         :return: Returns a list with all dropped or duplicated video frames.
         """
-        self.__qr_code_detection()
+        self.__qr_code_detection(crop_video=crop_video)
         self.__test_data_file_writer()
         list_of_detected_frame_drops = self.__list_video_frame_errors()
         return list_of_detected_frame_drops
+
+    def crop_frame(self, frame: np.ndarray, margin: int = 0):
+        x, y, w, h = self.__qr_code_position
+        m = margin
+        # (height, width) = frame.shape[:2]
+        cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
+        return cropped_frame
