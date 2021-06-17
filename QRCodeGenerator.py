@@ -11,6 +11,7 @@ class QRCodeGenerator:
     def generate_qr_codes(self):
         print('Beginning QR-Code generation...')
         for frame in range(self.frames):
+            print(frame)
             qr = pyqrcode.create(frame + 1)
             img_name = 'Images/QR_Code_Frame_' + str(frame + 1) + '.png'
             qr.png(img_name, scale=5)
