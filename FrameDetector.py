@@ -59,6 +59,7 @@ class FrameDetector:
                 text_data = str(self.__qr_code_scanner(gray_frame))
                 if not text_data == 'None':
                     frame_index_list.append(int(text_data))
+                    # print(int(text_data))
                 else:
                     frame_index_list.append('QR code was not readable.')
             else:
