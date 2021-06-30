@@ -143,7 +143,7 @@ class FrameDetector:
         list_of_detected_frame_drops = self.__list_video_frame_errors()
         return list_of_detected_frame_drops
 
-    def crop_frame(self, frame: np.ndarray, margin: int = 0):
+    def crop_frame(self, frame: np.ndarray, margin: int = 1):
         """
         Crops current frame to only contain the QR Code.
         :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
