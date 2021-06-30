@@ -12,12 +12,14 @@ def render_test_video(*, video_file_path, new_video_file_name, codec=None):
         total_video_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
         framerate = cap.get(cv.CAP_PROP_FPS)
         gen = QRCodeGenerator(total_video_frames)
-        gen.generate_qr_codes()
+        # gen.generate_qr_codes()
         frame_counter = 0
         img_array = []
 
-        for filename in glob.glob('Images/*.png'):
-            img = cv.imread(filename)
+        for qr_code_count in range(1, total_video_frames):
+            path_to_qr_code = 'Images/QR_Code_Frame_' + str(qr_code_count) + '.png'
+            # print(path_to_qr_code)
+            img = cv.imread(path_to_qr_code)
             img_height, img_width, _ = img.shape
             img_array.append(img)
 
@@ -52,7 +54,7 @@ def render_test_video(*, video_file_path, new_video_file_name, codec=None):
             if ret:
 
                 frame[y_position:y_position + img_height, x_position:x_position + img_width] = img_array[frame_counter]
-
+                print(frame_counter)
                 out.write(frame)
                 # cv.imshow('Frame', frame)
                 frame_counter += 1
@@ -68,7 +70,7 @@ def render_test_video(*, video_file_path, new_video_file_name, codec=None):
         print('Video rendering complete.')
     finally:
         time.sleep(1)
-        delete_temp_images()
+        # delete_temp_images()
 
 
 def delete_temp_images():
@@ -79,11 +81,12 @@ def delete_temp_images():
 
 
 if __name__ == '__main__':
-    render_test_video(video_file_path='Video/Initial Test Video/RW_150Frames_24FPS_1080P.mp4',
-                      new_video_file_name='Video/QR_150_Frames_24FPS.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'))
+    render_test_video(video_file_path='Video/Test Movie 2019 (2h Long Run) - H.264 - 25 fps - 1080p - AAC.mp4',
+                      new_video_file_name='Video/QR_Code_Frame_180587Frames_25FPS.mp4',
+                      codec=cv.VideoWriter_fourcc(*'mp4v'))
 
-    render_test_video(video_file_path='Video/Initial Test Video/RW_150Frames_25FPS_1080P.mp4',
-                      new_video_file_name='Video/QR_150_Frames_25FPS.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'))
+    # render_test_video(video_file_path='Video/Initial Test Video/RW_150Frames_25FPS_1080P.mp4',
+    #                   new_video_file_name='Video/QR_150_Frames_25FPS.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'))
     #
     # render_test_video(video_file_path='Video/Initial Test Video/RW_150Frames_29.97FPS_1080P.mp4',
     #                   new_video_file_name='Video/QR_150_Frames_29.97FPS.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'))
