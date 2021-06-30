@@ -30,14 +30,3 @@ class ObsController:
 
     def set_video_directory(self, *, path):
         self.web_socket.call(requests.SetRecordingFolder(path))
-
-
-if __name__ == '__main__':
-    obs = ObsController()
-    try:
-        obs.connect_with_obs()
-        time.sleep(1)
-        obs.set_profile('30fps')
-        time.sleep(1)
-    finally:
-        obs.disconnect_with_obs()
