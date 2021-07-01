@@ -108,19 +108,6 @@ class FrameDetector:
         scan_data.close()
         print('"' + scan_data_name + '"' + ' has been created.\n')
 
-    def __list_video_frame_errors(self):
-        """
-        Every frame has to occure only once. Every anomaly gets listed by this function.
-        :return: Returns a list with all dropped or duplicated video frames.
-        """
-        list_of_problematic_frames = []
-        for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence = self.scan_list.count(current_frame)
-            if occurrence != 1:
-                list_of_problematic_frames.append('Frame ' + str(current_frame) +
-                                                  ' occurred ' + str(occurrence) + ' times.')
-        return list_of_problematic_frames
-
     def set_video_analysis_parameters(self, video_file_path: str, expected_amount_of_frames: int):
         """
         Sets all parameters needed to use frame drop detection on a desired video.
@@ -131,17 +118,30 @@ class FrameDetector:
         self.video_file_path = video_file_path
         self.expected_amount_of_frames = expected_amount_of_frames
 
-    def frame_drop_detection(self, crop_video: bool = True):
+    def frame_drop_detection(self, crop_video: bool = True, frames_per_second: float = None):
         """
         Core function to detect frame drops & frame duplicates in a video file.
+        :param frames_per_second: Set this float value equal to the frame rate of the playback video.
         :param crop_video: A boolean that toggles if the video is cropped to contain only the QR Code.
         Enabling this will significantly improve scan speed.
         :return: Returns a list with all dropped or duplicated video frames.
         """
         self.__qr_code_detection(crop_video=crop_video)
         self.__test_data_file_writer()
-        list_of_detected_frame_drops = self.__list_video_frame_errors()
-        return list_of_detected_frame_drops
+        if frames_per_second is None:
+            list_of_detected_frame_drops = self.__list_video_frame_errors_default()
+            return list_of_detected_frame_drops
+        elif frames_per_second == 60:
+            list_of_detected_frame_drops = self.__list_video_frame_errors_default()
+            return list_of_detected_frame_drops
+        elif frames_per_second == 50:
+            list_of_detected_frame_drops = self.__list_video_frame_errors_50_fps()
+            return list_of_detected_frame_drops
+        elif frames_per_second == 30:
+            list_of_detected_frame_drops = self.__list_video_frame_errors_30_fps()
+            return list_of_detected_frame_drops
+        else:
+            raise Exception(str(frames_per_second) + ' is a not supported framerate or a typo.')
 
     def crop_frame(self, frame: np.ndarray, margin: int = 1):
         """
@@ -154,3 +154,65 @@ class FrameDetector:
         m = margin
         cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
         return cropped_frame
+
+    def __list_video_frame_errors_default(self):
+        """
+        Every frame has to occure only once. Every anomaly gets listed by this function.
+        :return: Returns a list with all dropped or duplicated video frames.
+        """
+        list_of_problematic_frames = []
+        for current_frame in range(1, self.expected_amount_of_frames + 1):
+            occurrence_of_current_frame = self.scan_list.count(current_frame)
+            if occurrence_of_current_frame != 1:
+                list_of_problematic_frames.append('Frame ' + str(current_frame) +
+                                                  ' occurred ' + str(occurrence_of_current_frame) + ' times.')
+        return list_of_problematic_frames
+
+    # TODO: Implement __list_video_frame_errors_50_fps function.
+    def __list_video_frame_errors_59fps(self):
+        pass
+
+    def __list_video_frame_errors_50_fps(self):
+        """
+        Lists every frame error that happens during recording of video playback in 50 fps.
+        :return: Returns a list with all dropped or duplicated video frames.
+        """
+        list_of_problematic_frames = []
+        for current_frame in range(1, self.expected_amount_of_frames + 1):
+            occurrence_of_current_frame = self.scan_list.count(current_frame)
+            occurrence_of_previous_frame = self.scan_list.count(current_frame - 1)
+            occurrence_of_next_frame = self.scan_list.count(current_frame + 1)
+
+            if occurrence_of_current_frame != 1:
+                if occurrence_of_current_frame == 2:
+                    if occurrence_of_previous_frame != 1 and occurrence_of_next_frame != 1 \
+                            and current_frame != self.expected_amount_of_frames and current_frame - 1 != 0:
+                        list_of_problematic_frames.append('Frame ' + str(current_frame) +
+                                                          ' occurred ' + str(occurrence_of_current_frame) + ' times.')
+                else:
+                    list_of_problematic_frames.append('Frame ' + str(current_frame) +
+                                                      ' occurred ' + str(occurrence_of_current_frame) + ' times.')
+        return list_of_problematic_frames
+
+    def __list_video_frame_errors_30_fps(self):
+        """
+        Lists every frame error that happens during recording of video playback in 30 fps.
+        :return: Returns a list with all dropped or duplicated video frames.
+        """
+        list_of_problematic_frames = []
+        for current_frame in range(1, self.expected_amount_of_frames + 1):
+            occurrence_of_current_frame = self.scan_list.count(current_frame)
+            if occurrence_of_current_frame != 2:
+                list_of_problematic_frames.append('Frame ' + str(current_frame) +
+                                                  ' occurred ' + str(occurrence_of_current_frame) + ' times.')
+        return list_of_problematic_frames
+
+
+"""
+NOTES:
+pattern for 50 fps:
+            if current_frame % 25 == 1 or current_frame % 25 == 6 or current_frame % 25 == 10 or current_frame % 25 == 16 or current_frame % 25 == 20:
+                if occurrence != 2:
+                    list_of_problematic_frames.append('Frame ' + str(current_frame) +
+                                                      ' occurred ' + str(occurrence) + ' times. Expected: 2')
+"""
