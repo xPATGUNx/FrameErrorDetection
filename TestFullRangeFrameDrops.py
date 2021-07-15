@@ -8,6 +8,11 @@ from ObsController import ObsController
 
 def test_for_frame_drops(*, video_path: str, expected_amount_of_frames: int, recording_frame_rate: str = '60FPS',
                          playback_frame_rate: float, recording_length: int):
+
+    list_of_supported_frame_rates = [24, 25, 29.97, 30, 50, 59.94, 60]
+
+    if playback_frame_rate not in list_of_supported_frame_rates:
+        raise Exception(str(playback_frame_rate) + ' is a not supported framerate or a typo.')
     obs = ObsController()
     try:
         obs.connect_with_obs()
@@ -30,12 +35,13 @@ class TestFrameDropDetection(unittest.TestCase):
     def test_video_capture_for_frame_drops(self):
 
         path = 'D:/Captured Video'
-        expected_frames = 150
+        expected_frames = 5000
         recording_frame_rate = '60FPS'
-        playback_frame_rate = 30
-        length_of_recording = 10
+        playback_frame_rate = 60
+        length_of_recording = 100
+        amount_of_allowed_errors = 2
         frame_drops = test_for_frame_drops(video_path=path, expected_amount_of_frames=expected_frames,
                                            recording_frame_rate=recording_frame_rate,
                                            recording_length=length_of_recording,
                                            playback_frame_rate=playback_frame_rate)
-        self.assertEqual(len(frame_drops), 2, "Errors have been detected: " + str(frame_drops))
+        self.assertEqual(len(frame_drops), amount_of_allowed_errors, "Errors have been detected: " + str(frame_drops))
