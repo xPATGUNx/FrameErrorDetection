@@ -4,6 +4,7 @@ import time
 import cv2 as cv
 import pyzbar.pyzbar as pyzbar
 import numpy as np
+from QualityMetrics import *
 
 
 class FrameDetector:
@@ -89,25 +90,6 @@ class FrameDetector:
                 # print(data)
                 return data
 
-    def __test_data_file_writer(self):
-        """
-        Generates a text file and fills it with data from the passed list.
-        """
-        base_name = os.path.basename(self.video_file_path)
-        timestr = time.strftime("%Y %m %d-%H%M%S")
-        scan_data_name = ('Scan Results ' + timestr + str(base_name) + '.txt')
-        scan_data_dir = ('Scan Results/' + scan_data_name)
-        scan_data = open(scan_data_dir, 'w')
-        scan_data.write('Detected frames for file "' + self.video_file_path + '":\n')
-
-        for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence = self.scan_list.count(current_frame)
-            scan_data.write('Frame ' + str(current_frame) + ' occurred ' + str(occurrence) + ' times.\n')
-        not_readable_frames = self.scan_list.count('QR code was not readable.')
-        scan_data.write('QR code was not readable for ' + str(not_readable_frames) + ' frames.')
-        scan_data.close()
-        print('"' + scan_data_name + '"' + ' has been created.\n')
-
     def set_video_analysis_parameters(self, video_file_path: str, expected_amount_of_frames: int):
         """
         Sets all parameters needed to use frame drop detection on a desired video.
@@ -128,7 +110,10 @@ class FrameDetector:
         :return: Returns a list with all dropped or duplicated video frames.
         """
         self.__qr_code_detection(crop_video=crop_video)
-        self.__test_data_file_writer()
+        test_data_file_writer(video_file_path=self.video_file_path,
+                              expected_amount_of_frames=self.expected_amount_of_frames,
+                              scan_list=self.scan_list)
+
         if frames_per_second is None or frames_per_second == 60:
             list_of_detected_frame_drops = self.__list_video_frame_errors_default()
             return list_of_detected_frame_drops
@@ -235,7 +220,7 @@ class FrameDetector:
         list_of_problematic_frames = []
         for current_frame in range(1, self.expected_amount_of_frames + 1):
             occurrence_of_current_frame = self.scan_list.count(current_frame)
-            if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2\
+            if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2 \
                     and occurrence_of_current_frame != 3:
                 list_of_problematic_frames.append('Frame ' + str(current_frame) +
                                                   ' occurred ' + str(occurrence_of_current_frame) + ' times.')
