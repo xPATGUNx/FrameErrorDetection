@@ -1,0 +1,7 @@
+Quality Metrics for "2021-07-28 09-34-26.mp4":
+
+Detected frame errors:
+Frame 1 occurred 45 times.
+Frame 5000 occurred 7 times.
+
+Amount of dropped frames: 0

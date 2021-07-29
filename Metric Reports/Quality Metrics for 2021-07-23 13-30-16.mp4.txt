@@ -1,0 +1,11 @@
+Quality Metrics for "2021-07-23 13-30-16.mp4":
+
+Detected frame errors:
+Frame 1 occurred 57 times.
+Frame 3592 occurred 3 times.
+Frame 3593 occurred 1 times.
+Frame 4198 occurred 3 times.
+Frame 4199 occurred 1 times.
+Frame 5000 occurred 6 times.
+
+Amount of dropped frames: 0
