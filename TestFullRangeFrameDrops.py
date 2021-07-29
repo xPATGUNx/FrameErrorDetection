@@ -34,12 +34,12 @@ def test_for_frame_drops(*, video_path: str, expected_amount_of_frames: int, rec
 class TestFrameDropDetection(unittest.TestCase):
     def test_video_capture_for_frame_drops(self):
 
-        path = 'D:/Captured Video'
-        expected_frames = 5000
-        recording_frame_rate = '60FPS'
-        playback_frame_rate = 60
-        length_of_recording = 100
-        amount_of_allowed_errors = 2
+        path = 'D:/Captured Video'          # Path to video capture directory
+        expected_frames = 5000              # Total amount of expected video frames
+        recording_frame_rate = '60FPS'      # Capture framerate (to simulate a consumer display set this to '60FPS')
+        playback_frame_rate = 30            # Framerate of video playback
+        length_of_recording = 180           # Duration of recording in seconds
+        amount_of_allowed_errors = 2        # Amount of tolerated frame errors
         frame_drops = test_for_frame_drops(video_path=path, expected_amount_of_frames=expected_frames,
                                            recording_frame_rate=recording_frame_rate,
                                            recording_length=length_of_recording,
