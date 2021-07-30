@@ -2,9 +2,12 @@ import os
 import time
 
 
-def test_data_file_writer(*, video_file_path, expected_amount_of_frames, scan_list):
+def test_data_file_writer(*, video_file_path: str, expected_amount_of_frames: int, scan_list: list):
     """
     Generates a text file and fills it with data from the passed list.
+    :param video_file_path: path to video file that is being tested.
+    :param expected_amount_of_frames: An integer of the total amount of expected frames.
+    :param scan_list: A list containing all detected frames.
     """
     base_name = os.path.basename(video_file_path)
     timestr = time.strftime("%Y %m %d-%H%M%S")
@@ -22,7 +25,13 @@ def test_data_file_writer(*, video_file_path, expected_amount_of_frames, scan_li
     print('"' + scan_data_name + '"' + ' has been created.\n')
 
 
-def list_frame_drops(*, expected_amount_of_frames, scan_list):
+def list_frame_drops(*, expected_amount_of_frames: int, scan_list: list):
+    """
+    Lists all detected frame drops.
+    :param expected_amount_of_frames: An integer of the total amount of expected frames.
+    :param scan_list: A list containing all detected frames.
+    :return: Returns a list containing integers representing the frame index of dropped frames.
+    """
     frame_drop_index_list = []
     for current_frame in range(1, expected_amount_of_frames + 1):
         occurrence = scan_list.count(current_frame)
@@ -32,6 +41,11 @@ def list_frame_drops(*, expected_amount_of_frames, scan_list):
 
 
 def list_frame_error_distances(*, frame_error_dict: dict):
+    """
+    Lists the distances between frame error indices.
+    :param frame_error_dict: A dictionary containing the index of all frame errors.
+    :return: Returns a list of strings containing information about the distance between frame errors
+    """
     frame_error_dict = frame_error_dict
     frame_error_distances_list = []
     frame_error_index_list = []
@@ -50,11 +64,23 @@ def list_frame_error_distances(*, frame_error_dict: dict):
 
 
 def index_of_first_frame_error(scan_list):
+    """
+    A function to return the first frame error.
+    :param scan_list: a list containing all detected frames.
+    :return: Returns the first element of the scan list.
+    """
     first_frame_error = scan_list[0]
     return first_frame_error
 
 
 def quality_metrics_report_writer(*, video_file_path: str, expected_amount_of_frames: int, scan_list, frame_error_dict):
+    """
+    Generates a text file containing all quality metric results.
+    :param video_file_path: path to video file that is being tested.
+    :param expected_amount_of_frames: An integer of the total amount of expected frames.
+    :param scan_list: A list containing all detected frames.
+    :param frame_error_dict: A dictionary containing the index of all frame errors.
+    """
     base_name = os.path.basename(video_file_path)
     metric_file_name = 'Quality Metrics for ' + str(base_name) + '.txt'
     metric_report_dir = 'Metric Reports/' + metric_file_name

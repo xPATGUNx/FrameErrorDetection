@@ -8,13 +8,29 @@ from QualityMetrics import *
 
 
 class FrameDetector:
+    """
+    Core class for detection of frame errors.
+    """
     def __init__(self):
         self.video_file_path = ''
         self.expected_amount_of_frames = 0
-        self.scan_list = []
+        self.video_frame_scan_list = []
         self.__qr_code_position = None
 
-    def __find_position_of_qr_code(self):
+    def set_video_analysis_parameters(self, video_file_path: str, expected_amount_of_frames: int):
+        """
+        Sets all parameters needed to use frame drop detection on a desired video.
+        :param video_file_path: A string of the video_file_path to a video that needs to be analysed.
+        :param expected_amount_of_frames: An integer with the exact amount of expected video frames to check against.
+        """
+        self.video_file_path = video_file_path
+        self.expected_amount_of_frames = expected_amount_of_frames
+
+    def __find_position_of_qr_code(self) -> None:
+        """
+        Iterates over video frames until the QR code is found.
+        The position of the QR code is then saved to self.__qr_code_position.
+        """
         cap = cv.VideoCapture(self.video_file_path)
         print('Scanning for QR Code location...')
         start = time.time()
@@ -39,7 +55,7 @@ class FrameDetector:
     def __qr_code_detection(self, crop_video: bool = True):
         """
         Iterates over every video frame individually and checks its QR code for frame index.
-        :return: A list of every frame index.
+        A list of every frame index is saved to self.video_frame_scan_list.
         """
         self.__find_position_of_qr_code()
         cap = cv.VideoCapture(self.video_file_path)
@@ -69,14 +85,15 @@ class FrameDetector:
         cap.release()
         cv.destroyAllWindows()
         print('Scan completed after ' + str(end - start) + ' seconds.')
-        self.scan_list = frame_index_list
+        self.video_frame_scan_list = frame_index_list
 
     @staticmethod
     def __qr_code_scanner(frame: np.ndarray, return_position: bool = False):
         """
-        A simple QR-Code scanner.
+        A simple QR-Code scanner that can be used to either read the QR-Code or simply return its position.
         :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
-        :return: Returns the encoded data from the QR-Code
+        :param return_position: A boolean that toggles between the return of QR-Code data or its position.
+        :return: Returns the encoded data from the QR-Code or its position in the frame.
         """
         if return_position:
             qr_code = pyzbar.decode(frame)
@@ -90,70 +107,67 @@ class FrameDetector:
                 # print(data)
                 return data
 
-    def set_video_analysis_parameters(self, video_file_path: str, expected_amount_of_frames: int):
-        """
-        Sets all parameters needed to use frame drop detection on a desired video.
-        :param video_file_path: A string of the video_file_path to a video that needs to be analysed.
-        :param expected_amount_of_frames: An integer with the exact amount of expected video frames to check against.
-        :return:
-        """
-        self.video_file_path = video_file_path
-        self.expected_amount_of_frames = expected_amount_of_frames
-
-    def frame_drop_detection(self, crop_video: bool = True, frames_per_second: float = None):
+    def frame_drop_detection(self, *, crop_video: bool = True, frames_per_second: float = None):
         """
         Core function to detect frame drops & frame duplicates in a video file.
         The validation of 59 and 29 fps needs further evaluation. For now it is seen as equal to either 60 or 30 fps.
         :param frames_per_second: Set this float value equal to the frame rate of the playback video.
         :param crop_video: A boolean that toggles if the video is cropped to contain only the QR Code.
         Enabling this will significantly improve scan speed.
-        :return: Returns a list with all dropped or duplicated video frames.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         self.__qr_code_detection(crop_video=crop_video)
         test_data_file_writer(video_file_path=self.video_file_path,
                               expected_amount_of_frames=self.expected_amount_of_frames,
-                              scan_list=self.scan_list)
+                              scan_list=self.video_frame_scan_list)
         if frames_per_second is None or frames_per_second == 60:
             list_of_detected_frame_drops = self.__list_video_frame_errors_default()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.scan_list, frame_error_dict=list_of_detected_frame_drops)
+                                          scan_list=self.video_frame_scan_list,
+                                          frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         elif frames_per_second == 59.94:
             list_of_detected_frame_drops = self.__list_video_frame_errors_59_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.scan_list, frame_error_dict=list_of_detected_frame_drops)
+                                          scan_list=self.video_frame_scan_list,
+                                          frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         elif frames_per_second == 50:
             list_of_detected_frame_drops = self.__list_video_frame_errors_50_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.scan_list, frame_error_dict=list_of_detected_frame_drops)
+                                          scan_list=self.video_frame_scan_list,
+                                          frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         elif frames_per_second == 30:
             list_of_detected_frame_drops = self.__list_video_frame_errors_30_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.scan_list, frame_error_dict=list_of_detected_frame_drops)
+                                          scan_list=self.video_frame_scan_list,
+                                          frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         elif frames_per_second == 29.97:
             list_of_detected_frame_drops = self.__list_video_frame_errors_29_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.scan_list, frame_error_dict=list_of_detected_frame_drops)
+                                          scan_list=self.video_frame_scan_list,
+                                          frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         elif frames_per_second == 25:
             list_of_detected_frame_drops = self.__list_video_frame_errors_25_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.scan_list, frame_error_dict=list_of_detected_frame_drops)
+                                          scan_list=self.video_frame_scan_list,
+                                          frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         elif frames_per_second == 24:
             list_of_detected_frame_drops = self.__list_video_frame_errors_24_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.scan_list, frame_error_dict=list_of_detected_frame_drops)
+                                          scan_list=self.video_frame_scan_list,
+                                          frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         else:
             raise Exception(str(frames_per_second) + ' is a not supported framerate or a typo.')
@@ -177,7 +191,7 @@ class FrameDetector:
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence_of_current_frame = self.scan_list.count(current_frame)
+            occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 1:
                 dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
         return dictionary_of_frame_errors
@@ -189,7 +203,7 @@ class FrameDetector:
                 """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence_of_current_frame = self.scan_list.count(current_frame)
+            occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2:
                 dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
 
@@ -202,9 +216,9 @@ class FrameDetector:
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence_of_current_frame = self.scan_list.count(current_frame)
-            occurrence_of_previous_frame = self.scan_list.count(current_frame - 1)
-            occurrence_of_next_frame = self.scan_list.count(current_frame + 1)
+            occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
+            occurrence_of_previous_frame = self.video_frame_scan_list.count(current_frame - 1)
+            occurrence_of_next_frame = self.video_frame_scan_list.count(current_frame + 1)
 
             if occurrence_of_current_frame != 1:
                 if occurrence_of_current_frame == 2:
@@ -222,7 +236,7 @@ class FrameDetector:
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence_of_current_frame = self.scan_list.count(current_frame)
+            occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 2:
                 dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
         return dictionary_of_frame_errors
@@ -234,7 +248,7 @@ class FrameDetector:
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence_of_current_frame = self.scan_list.count(current_frame)
+            occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2 \
                     and occurrence_of_current_frame != 3:
                 dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
@@ -248,9 +262,9 @@ class FrameDetector:
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence_of_current_frame = self.scan_list.count(current_frame)
-            occurrence_of_previous_frame = self.scan_list.count(current_frame - 1)
-            occurrence_of_next_frame = self.scan_list.count(current_frame + 1)
+            occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
+            occurrence_of_previous_frame = self.video_frame_scan_list.count(current_frame - 1)
+            occurrence_of_next_frame = self.video_frame_scan_list.count(current_frame + 1)
 
             if occurrence_of_current_frame != 2:
                 if occurrence_of_current_frame == 3:
@@ -268,9 +282,9 @@ class FrameDetector:
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
-            occurrence_of_current_frame = self.scan_list.count(current_frame)
-            occurrence_of_previous_frame = self.scan_list.count(current_frame - 1)
-            occurrence_of_next_frame = self.scan_list.count(current_frame + 1)
+            occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
+            occurrence_of_previous_frame = self.video_frame_scan_list.count(current_frame - 1)
+            occurrence_of_next_frame = self.video_frame_scan_list.count(current_frame + 1)
 
             if occurrence_of_current_frame != 2:
                 if occurrence_of_current_frame == 3:
