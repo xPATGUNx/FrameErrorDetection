@@ -301,13 +301,3 @@ class FrameDetector:
                 else:
                     dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
         return dictionary_of_frame_errors
-
-
-"""
-NOTES:
-pattern for 50 fps:
-            if current_frame % 25 == 1 or current_frame % 25 == 6 or current_frame % 25 == 10 or current_frame % 25 == 16 or current_frame % 25 == 20:
-                if occurrence != 2:
-                    list_of_problematic_frames.append('Frame ' + str(current_frame) +
-                                                      ' occurred ' + str(occurrence) + ' times. Expected: 2')
-"""
