@@ -107,7 +107,7 @@ class FrameDetector:
                 # print(data)
                 return data
 
-    def frame_drop_detection(self, *, crop_video: bool = True, frames_per_second: float = None):
+    def frame_drop_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
         Core function to detect frame drops & frame duplicates in a video file.
         The validation of 59 and 29 fps needs further evaluation. For now it is seen as equal to either 60 or 30 fps.
@@ -120,54 +120,61 @@ class FrameDetector:
         test_data_file_writer(video_file_path=self.video_file_path,
                               expected_amount_of_frames=self.expected_amount_of_frames,
                               scan_list=self.video_frame_scan_list)
-        if frames_per_second is None or frames_per_second == 60:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_default()
+        if frames_per_second == 60:
+            list_of_detected_frame_drops = self.__list_video_frame_errors_60_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
                                           scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops)
+                                          frame_error_dict=list_of_detected_frame_drops,
+                                          frame_rate=frames_per_second)
             return list_of_detected_frame_drops
         elif frames_per_second == 59.94:
             list_of_detected_frame_drops = self.__list_video_frame_errors_59_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
                                           scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops)
+                                          frame_error_dict=list_of_detected_frame_drops,
+                                          frame_rate=frames_per_second)
             return list_of_detected_frame_drops
         elif frames_per_second == 50:
             list_of_detected_frame_drops = self.__list_video_frame_errors_50_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
                                           scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops)
+                                          frame_error_dict=list_of_detected_frame_drops,
+                                          frame_rate=frames_per_second)
             return list_of_detected_frame_drops
         elif frames_per_second == 30:
             list_of_detected_frame_drops = self.__list_video_frame_errors_30_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
                                           scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops)
+                                          frame_error_dict=list_of_detected_frame_drops,
+                                          frame_rate=frames_per_second)
             return list_of_detected_frame_drops
         elif frames_per_second == 29.97:
             list_of_detected_frame_drops = self.__list_video_frame_errors_29_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
                                           scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops)
+                                          frame_error_dict=list_of_detected_frame_drops,
+                                          frame_rate=frames_per_second)
             return list_of_detected_frame_drops
         elif frames_per_second == 25:
             list_of_detected_frame_drops = self.__list_video_frame_errors_25_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
                                           scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops)
+                                          frame_error_dict=list_of_detected_frame_drops,
+                                          frame_rate=frames_per_second)
             return list_of_detected_frame_drops
         elif frames_per_second == 24:
             list_of_detected_frame_drops = self.__list_video_frame_errors_24_fps()
             quality_metrics_report_writer(video_file_path=self.video_file_path,
                                           expected_amount_of_frames=self.expected_amount_of_frames,
                                           scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops)
+                                          frame_error_dict=list_of_detected_frame_drops,
+                                          frame_rate=frames_per_second)
             return list_of_detected_frame_drops
         else:
             raise Exception(str(frames_per_second) + ' is a not supported framerate or a typo.')
@@ -184,7 +191,7 @@ class FrameDetector:
         cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
         return cropped_frame
 
-    def __list_video_frame_errors_default(self):
+    def __list_video_frame_errors_60_fps(self):
         """
         Every frame has to occure only once. Every anomaly gets listed by this function.
         :return: Returns a list with all dropped or duplicated video frames.

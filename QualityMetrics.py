@@ -1,5 +1,6 @@
 import os
 import time
+from Utils import calc_current_time_code
 
 
 def test_data_file_writer(*, video_file_path: str, expected_amount_of_frames: int, scan_list: list):
@@ -73,9 +74,11 @@ def index_of_first_frame_error(scan_list):
     return first_frame_error
 
 
-def quality_metrics_report_writer(*, video_file_path: str, expected_amount_of_frames: int, scan_list, frame_error_dict):
+def quality_metrics_report_writer(*, video_file_path: str, expected_amount_of_frames: int, scan_list, frame_error_dict,
+                                  frame_rate: float):
     """
     Generates a text file containing all quality metric results.
+    :param frame_rate: Set this float value to the frame rate of the test video that is being captured.
     :param video_file_path: path to video file that is being tested.
     :param expected_amount_of_frames: An integer of the total amount of expected frames.
     :param scan_list: A list containing all detected frames.
@@ -97,8 +100,11 @@ def quality_metrics_report_writer(*, video_file_path: str, expected_amount_of_fr
                 amount_of_dropped_frames = len(frame_drop_index_list)
                 metric_report_writer.write('Amount of dropped frames: ' + str(amount_of_dropped_frames) + '\n\n')
                 metric_report_writer.write('Detected frame errors:\n')
-                for frame, ocurrence in frame_error_dict.items():
-                    metric_report_writer.write('Frame ' + str(frame) + ' occurred ' + str(ocurrence) + ' times.' + '\n')
+                for frame, occurrence in frame_error_dict.items():
+                    occurrence_of_frame = occurrence
+                    time_code_position = calc_current_time_code(frame, frame_rate)
+                    metric_report_writer.write('Frame ' + str(frame) + ' occurred ' + str(occurrence_of_frame) +
+                                               ' times. Time Code position: ' + str(time_code_position) + '\n')
                 metric_report_writer.write('\n')
                 if len(frame_error_dict) > 1:
                     frame_drop_distance_list = list_frame_error_distances(frame_error_dict=frame_error_dict)
