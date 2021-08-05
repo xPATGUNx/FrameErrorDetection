@@ -1,6 +1,3 @@
-import os
-import time
-
 import cv2 as cv
 import pyzbar.pyzbar as pyzbar
 import numpy as np
