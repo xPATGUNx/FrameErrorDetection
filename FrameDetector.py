@@ -49,7 +49,7 @@ class FrameDetector:
         cap.release()
         cv.destroyAllWindows()
 
-    def __qr_code_detection(self, crop_video: bool = True):
+    def scan_video_frames_for_id(self, crop_video: bool = True):
         """
         Iterates over every video frame individually and checks its QR code for frame index.
         A list of every frame index is saved to self.video_frame_scan_list.
@@ -113,7 +113,7 @@ class FrameDetector:
         Enabling this will significantly improve scan speed.
         :return: Returns a dictionary with all dropped or duplicated video frames.
         """
-        self.__qr_code_detection(crop_video=crop_video)
+        self.scan_video_frames_for_id(crop_video=crop_video)
         test_data_file_writer(video_file_path=self.video_file_path,
                               expected_amount_of_frames=self.expected_amount_of_frames,
                               scan_list=self.video_frame_scan_list)
