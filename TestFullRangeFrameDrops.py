@@ -38,7 +38,7 @@ def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frame
     list_of_files = glob.glob(video_directory_path + '/*')
     latest_video_capture = max(list_of_files, key=os.path.getctime)
     frame_detector.set_video_analysis_parameters(latest_video_capture, expected_amount_of_frames)
-    detected_frame_errors = frame_detector.frame_drop_detection(crop_video=True, frames_per_second=playback_frame_rate)
+    detected_frame_errors = frame_detector.frame_error_detection(crop_video=True, frames_per_second=playback_frame_rate)
     return detected_frame_errors
 
 

@@ -96,7 +96,7 @@ class VideoScanner:
         cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
         return cropped_frame
 
-    def frame_drop_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
+    def frame_error_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
         Core function to detect frame drops & frame duplicates in a video file.
         The validation of 59 and 29 fps needs further evaluation. For now it is seen as equal to either 60 or 30 fps.

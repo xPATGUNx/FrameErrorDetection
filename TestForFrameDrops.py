@@ -8,7 +8,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_59FPS_video_for_frame_drops(self):
@@ -16,7 +16,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_50FPS_video_for_frame_drops(self):
@@ -24,7 +24,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_30FPS_video_for_frame_drops(self):
@@ -32,7 +32,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_29FPS_video_for_frame_drops(self):
@@ -40,7 +40,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_25FPS_video_for_frame_drops(self):
@@ -48,7 +48,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_24FPS_video_for_frame_drops(self):
@@ -56,7 +56,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_videos_for_frame_drops(self):
@@ -64,7 +64,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=True)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=True)
         self.assertNotEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_mkv_video_for_frame_drops(self):
@@ -72,7 +72,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection()
+        detected_frame_drops = frame_detector.frame_error_detection()
         self.assertNotEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_2h_video_for_frame_drops(self):
@@ -80,7 +80,7 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 180586
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection()
+        detected_frame_drops = frame_detector.frame_error_detection()
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
 
     def test_capture_for_frame_drops(self):
@@ -88,5 +88,5 @@ class TestFrameDropDetection(unittest.TestCase):
         expected_video_frames = 150
         frame_detector = VideoScanner()
         frame_detector.set_video_analysis_parameters(video, expected_video_frames)
-        detected_frame_drops = frame_detector.frame_drop_detection(crop_video=False)
+        detected_frame_drops = frame_detector.frame_error_detection(crop_video=False)
         self.assertEqual(len(detected_frame_drops), 0, "A problem has been detected: " + str(detected_frame_drops))
