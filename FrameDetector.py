@@ -1,7 +1,7 @@
 import cv2 as cv
-import pyzbar.pyzbar as pyzbar
 import numpy as np
 from QualityMetrics import *
+from Utils import qr_code_scanner
 
 
 class FrameDetector:
@@ -38,7 +38,7 @@ class FrameDetector:
             if ret:
                 gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
                 # print(self.__qr_code_scanner(gray_frame, return_position=True))
-                qr_code_coordinates = self.__qr_code_scanner(gray_frame, return_position=True)
+                qr_code_coordinates = qr_code_scanner(gray_frame, return_position=True)
                 if qr_code_coordinates is not None:
                     self.__qr_code_position = qr_code_coordinates
                     end = time.time()
@@ -70,7 +70,7 @@ class FrameDetector:
                 else:
                     video_frame = frame
                 gray_frame = cv.cvtColor(video_frame, cv.COLOR_BGR2GRAY)
-                text_data = str(self.__qr_code_scanner(gray_frame))
+                text_data = str(qr_code_scanner(gray_frame))
                 if not text_data == 'None':
                     frame_index_list.append(int(text_data))
                     # print(int(text_data))
@@ -83,26 +83,6 @@ class FrameDetector:
         cv.destroyAllWindows()
         print('Scan completed after ' + str(end - start) + ' seconds.')
         self.video_frame_scan_list = frame_index_list
-
-    @staticmethod
-    def __qr_code_scanner(frame: np.ndarray, return_position: bool = False):
-        """
-        A simple QR-Code scanner that can be used to either read the QR-Code or simply return its position.
-        :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
-        :param return_position: A boolean that toggles between the return of QR-Code data or its position.
-        :return: Returns the encoded data from the QR-Code or its position in the frame.
-        """
-        if return_position:
-            qr_code = pyzbar.decode(frame)
-            for location in qr_code:
-                (x, y, w, h) = location.rect
-                return x, y, w, h
-        else:
-            qr_code = pyzbar.decode(frame)
-            for code in qr_code:
-                data = code.data.decode('utf-8')
-                # print(data)
-                return data
 
     def frame_drop_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
