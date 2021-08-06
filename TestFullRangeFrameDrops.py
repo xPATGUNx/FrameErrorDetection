@@ -2,7 +2,7 @@ import glob
 import os
 import time
 import unittest
-from VideoScanner import VideoScanner
+from FrameErrorDetector import FrameErrorDetector
 from ObsController import ObsController
 
 
@@ -34,11 +34,12 @@ def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frame
     finally:
         obs.disconnect_with_obs()
     time.sleep(5)
-    frame_detector = VideoScanner()
+    frame_error_detector = FrameErrorDetector()
     list_of_files = glob.glob(video_directory_path + '/*')
     latest_video_capture = max(list_of_files, key=os.path.getctime)
-    frame_detector.set_video_analysis_parameters(latest_video_capture, expected_amount_of_frames)
-    detected_frame_errors = frame_detector.frame_error_detection(crop_video=True, frames_per_second=playback_frame_rate)
+    frame_error_detector.set_video_analysis_parameters(latest_video_capture, expected_amount_of_frames)
+    detected_frame_errors = frame_error_detector.frame_error_detection(crop_video=True,
+                                                                       frames_per_second=playback_frame_rate)
     return detected_frame_errors
 
 
