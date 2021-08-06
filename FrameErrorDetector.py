@@ -80,7 +80,7 @@ class FrameErrorDetector(VideoScanner):
 
     def __list_video_frame_errors_60_fps(self):
         """
-        Every frame has to occure only once. Every anomaly gets listed by this function.
+        Every frame has to occur only once. Every anomaly gets listed by this function.
         :return: Returns a list with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
