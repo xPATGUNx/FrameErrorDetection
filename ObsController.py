@@ -1,4 +1,4 @@
-from obswebsocket import obsws, requests, events
+from obswebsocket import obsws, requests
 import time
 
 
