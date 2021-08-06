@@ -4,7 +4,7 @@ from QualityMetrics import *
 from Utils import qr_code_scanner
 
 
-class FrameDetector:
+class VideoScanner:
     """
     Core class for detection of frame errors.
     """
@@ -23,7 +23,7 @@ class FrameDetector:
         self.video_file_path = video_file_path
         self.expected_amount_of_frames = expected_amount_of_frames
 
-    def __find_position_of_qr_code(self) -> None:
+    def find_position_of_qr_code(self) -> None:
         """
         Iterates over video frames until the QR code is found.
         The position of the QR code is then saved to self.__qr_code_position.
@@ -54,7 +54,7 @@ class FrameDetector:
         Iterates over every video frame individually and checks its QR code for frame index.
         A list of every frame index is saved to self.video_frame_scan_list.
         """
-        self.__find_position_of_qr_code()
+        self.find_position_of_qr_code()
         cap = cv.VideoCapture(self.video_file_path)
         frame_index_list = []
         if not cap.isOpened():
@@ -83,6 +83,18 @@ class FrameDetector:
         cv.destroyAllWindows()
         print('Scan completed after ' + str(end - start) + ' seconds.')
         self.video_frame_scan_list = frame_index_list
+
+    def crop_frame(self, frame: np.ndarray, margin: int = 1):
+        """
+        Crops current frame to only contain the QR Code.
+        :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
+        :param margin: An integer that manipulates the cropping margin.
+        :return: Returns a cropped version of the current video frame.
+        """
+        x, y, w, h = self.__qr_code_position
+        m = margin
+        cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
+        return cropped_frame
 
     def frame_drop_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
@@ -155,18 +167,6 @@ class FrameDetector:
             return list_of_detected_frame_drops
         else:
             raise Exception(str(frames_per_second) + ' is a not supported framerate or a typo.')
-
-    def crop_frame(self, frame: np.ndarray, margin: int = 1):
-        """
-        Crops current frame to only contain the QR Code.
-        :param frame: numpy.ndarray`, `PIL.Image` or tuple (pixels, width, height)
-        :param margin: An integer that manipulates the cropping margin.
-        :return: Returns a cropped version of the current video frame.
-        """
-        x, y, w, h = self.__qr_code_position
-        m = margin
-        cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
-        return cropped_frame
 
     def __list_video_frame_errors_60_fps(self):
         """

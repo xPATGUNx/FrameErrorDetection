@@ -2,7 +2,7 @@ import glob
 import os
 import time
 import unittest
-from FrameDetector import FrameDetector
+from VideoScanner import VideoScanner
 from ObsController import ObsController
 
 
@@ -34,7 +34,7 @@ def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frame
     finally:
         obs.disconnect_with_obs()
     time.sleep(5)
-    frame_detector = FrameDetector()
+    frame_detector = VideoScanner()
     list_of_files = glob.glob(video_directory_path + '/*')
     latest_video_capture = max(list_of_files, key=os.path.getctime)
     frame_detector.set_video_analysis_parameters(latest_video_capture, expected_amount_of_frames)
@@ -47,8 +47,8 @@ class TestFrameDropDetection(unittest.TestCase):
         path = 'D:/Captured Video'      # Path to video capture directory
         expected_frames = 5000          # Total amount of expected video frames
         recording_frame_rate = '60FPS'  # Capture framerate (to simulate a consumer display set this to '60FPS')
-        playback_frame_rate = 60        # Framerate of video playback
-        length_of_recording = 100       # Duration of recording in seconds
+        playback_frame_rate = 24        # Framerate of video playback
+        length_of_recording = 250       # Duration of recording in seconds
         amount_of_allowed_errors = 2    # Amount of tolerated frame errors
         frame_errors = test_for_frame_errors(video_directory_path=path, expected_amount_of_frames=expected_frames,
                                              recording_frame_rate=recording_frame_rate,
