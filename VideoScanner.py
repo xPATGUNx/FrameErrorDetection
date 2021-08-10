@@ -12,6 +12,7 @@ class VideoScanner:
         self.video_file_path = ''
         self.expected_amount_of_frames = 0
         self.video_frame_scan_list = []
+        self.dict_of_frame_occurrences = {}
         self.__qr_code_position = None
 
     def set_video_analysis_parameters(self, video_file_path: str, expected_amount_of_frames: int):
@@ -86,6 +87,7 @@ class VideoScanner:
         cv.destroyAllWindows()
         print('Scan completed after ' + str(end - start) + ' seconds.')
         self.video_frame_scan_list = frame_index_list
+        self.create_dict_of_frame_occurrences()
 
     def crop_frame(self, frame: np.ndarray, margin: int = 1):
         """
@@ -98,3 +100,12 @@ class VideoScanner:
         m = margin
         cropped_frame = frame[y - m:y + h + m, x - m:x + w + m]
         return cropped_frame
+
+    def create_dict_of_frame_occurrences(self):
+        list_of_scanned_frames = self.video_frame_scan_list
+        expected_amount_of_frames = self.expected_amount_of_frames
+        dict_of_frame_occurrences = {}
+        for current_frame in range(1, expected_amount_of_frames + 1):
+            occurrence = list_of_scanned_frames.count(current_frame)
+            dict_of_frame_occurrences[current_frame] = occurrence
+        self.dict_of_frame_occurrences = dict_of_frame_occurrences
