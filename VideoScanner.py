@@ -12,6 +12,7 @@ class VideoScanner:
         self.video_file_path = ''
         self.expected_amount_of_frames = 0
         self.video_frame_scan_list = []
+        self.frame_drop_index_list = []
         self.dict_of_frame_occurrences = {}
         self.__qr_code_position = None
 
@@ -88,6 +89,7 @@ class VideoScanner:
         print('Scan completed after ' + str(end - start) + ' seconds.')
         self.video_frame_scan_list = frame_index_list
         self.create_dict_of_frame_occurrences()
+        self.list_frame_drops()
 
     def crop_frame(self, frame: np.ndarray, margin: int = 1):
         """
@@ -109,3 +111,14 @@ class VideoScanner:
             occurrence = list_of_scanned_frames.count(current_frame)
             dict_of_frame_occurrences[current_frame] = occurrence
         self.dict_of_frame_occurrences = dict_of_frame_occurrences
+
+    def list_frame_drops(self):
+        """
+        Lists all detected frame drops.
+        """
+        frame_drop_index_list = []
+        for current_frame in range(1, self.expected_amount_of_frames + 1):
+            occurrence = self.video_frame_scan_list.count(current_frame)
+            if occurrence == 0:
+                frame_drop_index_list.append(current_frame)
+        self.frame_drop_index_list = frame_drop_index_list
