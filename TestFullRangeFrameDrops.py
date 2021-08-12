@@ -35,16 +35,28 @@ def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frame
     finally:
         obs.disconnect_with_obs()
     time.sleep(5)
+
     frame_error_detector = FrameErrorDetector()
-    data_visualizer = DataVisualizer
+    data_visualizer = DataVisualizer()
     list_of_files = glob.glob(video_directory_path + '/*')
     latest_video_capture = max(list_of_files, key=os.path.getctime)
     frame_error_detector.set_video_analysis_parameters(latest_video_capture, expected_amount_of_frames)
     detected_frame_errors = frame_error_detector.frame_error_detection(crop_video=True,
                                                                        frames_per_second=playback_frame_rate)
+
     video_file_name = os.path.basename(frame_error_detector.video_file_path)
-    data_visualizer.visualize_frame_scan(frame_error_detector.dict_of_frame_occurrences,
-                                         video_file_name)
+    occurrences_of_frames = frame_error_detector.dict_of_frame_occurrences
+    frame_errors = len(detected_frame_errors)
+    frame_drops = len(frame_error_detector.frame_drop_index_list)
+    displayed_frames = expected_amount_of_frames - frame_drops
+    data_visualizer.set_parameters(file_name=video_file_name,
+                                   dictionary_of_frame_occurrences=occurrences_of_frames,
+                                   expected_amount_of_frames=expected_amount_of_frames,
+                                   displayed_frames=displayed_frames,
+                                   frame_errors=frame_errors,
+                                   frame_drops=frame_drops)
+    data_visualizer.visualize_frame_scan()
+    data_visualizer.visualize_video_stats()
     return detected_frame_errors
 
 
