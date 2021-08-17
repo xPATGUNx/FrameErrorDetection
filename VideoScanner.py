@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 import time
-from Utils import qr_code_scanner
+import QRCodeTools
 
 
 class VideoScanner:
@@ -43,7 +43,7 @@ class VideoScanner:
             if ret:
                 gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
                 # print(self.__qr_code_scanner(gray_frame, return_position=True))
-                qr_code_coordinates = qr_code_scanner(gray_frame, return_position=True)
+                qr_code_coordinates = QRCodeTools.qr_code_scanner(gray_frame, return_position=True)
                 if qr_code_coordinates is not None:
                     self.__qr_code_position = qr_code_coordinates
                     end = time.time()
@@ -75,7 +75,7 @@ class VideoScanner:
                 else:
                     video_frame = frame
                 gray_frame = cv.cvtColor(video_frame, cv.COLOR_BGR2GRAY)
-                text_data = str(qr_code_scanner(gray_frame))
+                text_data = str(QRCodeTools.qr_code_scanner(gray_frame))
                 if not text_data == 'None':
                     frame_index_list.append(int(text_data))
                     # print(int(text_data))
