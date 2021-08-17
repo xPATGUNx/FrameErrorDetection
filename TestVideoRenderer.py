@@ -3,16 +3,20 @@ import numpy as np
 import glob
 import os
 import time
-from QRCodeGenerator import QRCodeGenerator
+from QRCodeTools import generate_qr_codes
 
 
-def render_test_video(*, video_file_path, new_video_file_name, codec=None):
+def render_test_video(*, video_file_path, new_video_file_name=None, codec=None, custom_frame_rate=None):
     try:
         cap = cv.VideoCapture(video_file_path)
         total_video_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
-        framerate = cap.get(cv.CAP_PROP_FPS)
-        gen = QRCodeGenerator(total_video_frames)
-        # gen.generate_qr_codes()
+        print('Total amount of Frames in video: ' + str(total_video_frames))
+        if custom_frame_rate is None:
+            fps = cap.get(cv.CAP_PROP_FPS)
+        else:
+            fps = custom_frame_rate
+
+        generate_qr_codes(total_video_frames)
         frame_counter = 0
         img_array = []
 
@@ -26,7 +30,13 @@ def render_test_video(*, video_file_path, new_video_file_name, codec=None):
         frame_width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
         frame_height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
-        video_filename = new_video_file_name
+        base_name = os.path.basename(video_file_path)
+        base_name = os.path.splitext(base_name)[0]
+        if new_video_file_name is None:
+            video_file_name = 'Video/QR_Code_Videos/' + base_name + ' ' + str(fps) + 'FPS ' \
+                              + str(5000) + ' Frames.mp4'
+        else:
+            video_file_name = new_video_file_name
 
         if codec is not None:
             fourcc = codec
@@ -36,9 +46,8 @@ def render_test_video(*, video_file_path, new_video_file_name, codec=None):
             codec_from_video = codec_in_bytes.decode("ASCII")
             fourcc = cv.VideoWriter_fourcc(*codec_from_video)
 
-        fps = framerate
         video_size = (frame_width, frame_height)
-        out = cv.VideoWriter(video_filename, fourcc, fps, video_size)
+        out = cv.VideoWriter(video_file_name, fourcc, fps, video_size)
 
         x_position = 0
         y_position = 0
@@ -47,7 +56,8 @@ def render_test_video(*, video_file_path, new_video_file_name, codec=None):
             print("Error opening video stream or file")
 
         print('Beginning rendering process...')
-        while cap.isOpened():
+        amount_of_frames = 0
+        while frame_counter < 5000:
 
             ret, frame = cap.read()
 
@@ -58,8 +68,6 @@ def render_test_video(*, video_file_path, new_video_file_name, codec=None):
                 out.write(frame)
                 # cv.imshow('Frame', frame)
                 frame_counter += 1
-                if cv.waitKey(25) & 0xFF == ord('q'):
-                    break
 
             else:
                 break
@@ -81,9 +89,20 @@ def delete_temp_images():
 
 
 if __name__ == '__main__':
-    render_test_video(video_file_path='Video/Test Movie 2019 (2h Long Run) - H.264 - 25 fps - 1080p - AAC.mp4',
-                      new_video_file_name='Video/QR_Code_Frame_180587Frames_25FPS.mp4',
-                      codec=cv.VideoWriter_fourcc(*'mp4v'))
+    render_test_video(video_file_path='D:/Test Videos/Fractured 1080p.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'),
+                      custom_frame_rate=24.0)
+    render_test_video(video_file_path='D:/Test Videos/Fractured 1080p.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'),
+                      custom_frame_rate=25.0)
+    render_test_video(video_file_path='D:/Test Videos/Fractured 1080p.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'),
+                      custom_frame_rate=29.97)
+    render_test_video(video_file_path='D:/Test Videos/Fractured 1080p.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'),
+                      custom_frame_rate=30.0)
+    render_test_video(video_file_path='D:/Test Videos/Fractured 1080p.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'),
+                      custom_frame_rate=50.0)
+    render_test_video(video_file_path='D:/Test Videos/Fractured 1080p.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'),
+                      custom_frame_rate=59.94)
+    render_test_video(video_file_path='D:/Test Videos/Fractured 1080p.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'),
+                      custom_frame_rate=60.0)
 
     # render_test_video(video_file_path='Video/Initial Test Video/RW_150Frames_25FPS_1080P.mp4',
     #                   new_video_file_name='Video/QR_150_Frames_25FPS.mp4', codec=cv.VideoWriter_fourcc(*'mp4v'))
