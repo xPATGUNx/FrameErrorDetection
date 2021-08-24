@@ -39,7 +39,8 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
         pass_command(ffmpeg_command)
 
 
-def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000):
+def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000,
+                        scale_of_qr_code_image: int = 40):
     amount_of_leading_zeros = len(str(total_amount_of_frames))
     if os.path.exists(path_to_video):
         os.remove(path_to_video)
@@ -70,4 +71,4 @@ if __name__ == '__main__':
 
     # render_test_video('Video/Videos_in_different_Framerates/ft-60.mp4', frame_rate=60, qr_code_offset=20,
     #                   format_profile='main', format_level='4.0')
-    render_qr_code_clip('Rendered_Videos/test_qr_clip.mp4', frame_rate=60, total_amount_of_frames=150, resolution=1000)
+    render_qr_code_clip('Rendered_Videos/test_qr_clip.mp4', frame_rate=60, total_amount_of_frames=1000)
