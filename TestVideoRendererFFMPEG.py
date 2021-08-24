@@ -39,6 +39,21 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
         pass_command(ffmpeg_command)
 
 
+def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000):
+    amount_of_leading_zeros = len(str(total_amount_of_frames))
+    if os.path.exists(path_to_video):
+        os.remove(path_to_video)
+    delete_generated_qr_codes()
+    generate_qr_codes(total_amount_of_frames, img_scale=40)
+
+    ffmpeg_command = f'ffmpeg -r {frame_rate} -f image2 -s {resolution}x{resolution} ' \
+                     f'-i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png -vframes {total_amount_of_frames} ' \
+                     f'-vcodec libx264 -crf 25 -pix_fmt yuv420p {path_to_video}'
+
+    print(ffmpeg_command)
+    pass_command(ffmpeg_command)
+
+
 def pass_command(cmd_line: str):
     subprocess.check_output(cmd_line, shell=True)
 
@@ -53,5 +68,6 @@ def get_total_amount_of_frames_from_video(path_to_video: str):
 
 if __name__ == '__main__':
 
-    render_test_video('Video/Videos_in_different_Framerates/ft-60.mp4', frame_rate=60, qr_code_offset=20,
-                      format_profile='main', format_level='4.0')
+    # render_test_video('Video/Videos_in_different_Framerates/ft-60.mp4', frame_rate=60, qr_code_offset=20,
+    #                   format_profile='main', format_level='4.0')
+    render_qr_code_clip('Rendered_Videos/test_qr_clip.mp4', frame_rate=60, total_amount_of_frames=150, resolution=1000)
