@@ -7,7 +7,7 @@ from PIL import Image
 import numpy as np
 
 
-def generate_qr_codes(frames):
+def generate_qr_codes(frames, *, img_scale: int = 5):
     print('Beginning QR-Code generation...')
     leading_zeros = len(str(frames))
     format_str = '0' + str(leading_zeros) + 'd'
@@ -15,7 +15,7 @@ def generate_qr_codes(frames):
         # print(frame)
         qr = pyqrcode.create(frame + 1)
         img_name = f'Images/QR_Code_Frame_{frame + 1:{format_str}}.png'
-        qr.png(img_name, scale=5)
+        qr.png(img_name, scale=img_scale)
     print('QR-Codes have been generated for ' + str(frame + 1) + ' frames.')
 
 
