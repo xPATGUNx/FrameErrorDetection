@@ -65,17 +65,3 @@ class DataVisualizer:
         fig.set_size_inches(18.5, 10.5)
         path = 'Visual Graphs/Frame Stats/Frame Stats ' + str(self.file_name) + '.png'
         fig.savefig(path, dpi=100)
-
-
-test_dict = {
-    1: 0,
-    2: 3,
-    3: 2,
-    4: 2,
-    5: 2,
-    6: 3,
-    7: 2
-}
-
-if __name__ == '__main__':
-    pass
