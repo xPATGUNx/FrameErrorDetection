@@ -45,7 +45,7 @@ def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_o
     if os.path.exists(path_to_video):
         os.remove(path_to_video)
     delete_generated_qr_codes()
-    generate_qr_codes(total_amount_of_frames, img_scale=40)
+    generate_qr_codes(total_amount_of_frames, img_scale=scale_of_qr_code_image)
 
     ffmpeg_command = f'ffmpeg -r {frame_rate} -f image2 -s {resolution}x{resolution} ' \
                      f'-i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png -vframes {total_amount_of_frames} ' \
