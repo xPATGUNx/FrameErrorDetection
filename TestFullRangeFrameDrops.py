@@ -67,7 +67,7 @@ class TestFrameDropDetection(unittest.TestCase):
         recording_frame_rate = '60FPS'  # Capture framerate (to simulate a consumer display set this to '60FPS')
         playback_frame_rate = 60        # Framerate of video playback
         length_of_recording = 100       # Duration of recording in seconds
-        amount_of_allowed_errors = 2    # Amount of tolerated frame errors
+        amount_of_allowed_errors = 0    # Amount of tolerated frame errors
         frame_errors = test_for_frame_errors(video_directory_path=path, expected_amount_of_frames=expected_frames,
                                              recording_frame_rate=recording_frame_rate,
                                              recording_length=length_of_recording,
