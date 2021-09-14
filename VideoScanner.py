@@ -33,6 +33,7 @@ class VideoScanner:
         Iterates over video frames until the QR code is found.
         The position of the QR code is then saved to self.__qr_code_position.
         """
+        timeout_counter = 0
         cap = cv.VideoCapture(self.video_file_path)
         print('Scanning for QR Code location...')
         start = time.time()
@@ -41,6 +42,7 @@ class VideoScanner:
         while cap.isOpened():
             ret, frame = cap.read()
             if ret:
+                timeout_counter += 1
                 gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
                 # print(self.__qr_code_scanner(gray_frame, return_position=True))
                 qr_code_coordinates = QRCodeTools.qr_code_scanner(gray_frame, return_position=True)
@@ -49,6 +51,8 @@ class VideoScanner:
                     end = time.time()
                     print('Position of QR Code has been detected after ' + str(end - start) + ' seconds.')
                     break
+                if timeout_counter == 1200:
+                    raise Exception('QR Code could not be detected after 1200 frames.')
             else:
                 break
         cap.release()
@@ -104,6 +108,9 @@ class VideoScanner:
         return cropped_frame
 
     def create_dict_of_frame_occurrences(self):
+        """
+        Creates a dictionary with occurrences of every video frame.
+        """
         list_of_scanned_frames = self.video_frame_scan_list
         expected_amount_of_frames = self.expected_amount_of_frames
         dict_of_frame_occurrences = {}
