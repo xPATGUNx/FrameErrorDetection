@@ -36,7 +36,7 @@ class DataVisualizer:
         plt.axis([0, len(x), 0, 8])
         fig = plt.gcf()
         fig.set_size_inches(18.5, 10.5)
-        path = 'Visual Graphs/Occurrence Graphs/Occurrence Graph ' + str(self.file_name) + '.png'
+        path = 'Reports/Data/Visual Graphs/Occurrence Graphs/Occurrence Graph ' + str(self.file_name) + '.png'
         fig.savefig(path, dpi=100)
 
     def visualize_video_stats(self):
@@ -63,5 +63,5 @@ class DataVisualizer:
 
         fig = plt.gcf()
         fig.set_size_inches(18.5, 10.5)
-        path = 'Visual Graphs/Frame Stats/Frame Stats ' + str(self.file_name) + '.png'
+        path = 'Reports/Data/Visual Graphs/Frame Stats/Frame Stats ' + str(self.file_name) + '.png'
         fig.savefig(path, dpi=100)

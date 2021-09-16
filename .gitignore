@@ -5,12 +5,13 @@
 /Video/TestVideo.mp4
 /Video/TestVideoNew.mp4
 /Video/TestVideoNewAuto.mp4
-/Scan Results/
+/Reports/Data/Scan Results/
 Images/
-Scan Results/
+Reports/Data/Scan Results/
 Video/
 __pycache__/
 /obspython.py
-/Metric Reports/
-/Visual Graphs/
+/Reports/Data/Metric Reports/
+/Reports/Data/Visual Graphs/
 /NumbaTest.py
+/venv/

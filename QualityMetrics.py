@@ -13,7 +13,7 @@ def test_data_file_writer(*, video_file_path: str, expected_amount_of_frames: in
     base_name = os.path.basename(video_file_path)
     timestr = time.strftime("%Y %m %d-%H%M%S")
     scan_data_name = ('Scan Results ' + timestr + str(base_name) + '.txt')
-    scan_data_dir = ('Scan Results/' + scan_data_name)
+    scan_data_dir = ('Reports/Data/Scan Results/' + scan_data_name)
     scan_data = open(scan_data_dir, 'w')
     scan_data.write('Detected frames in file "' + video_file_path + '":\n')
 
@@ -86,7 +86,7 @@ def quality_metrics_report_writer(*, video_file_path: str, expected_amount_of_fr
     """
     base_name = os.path.basename(video_file_path)
     metric_file_name = 'Quality Metrics for ' + str(base_name) + '.txt'
-    metric_report_dir = 'Metric Reports/' + metric_file_name
+    metric_report_dir = 'Reports/Data/Metric Reports/' + metric_file_name
     frame_drop_index_list = list_frame_drops(expected_amount_of_frames=expected_amount_of_frames, scan_list=scan_list)
 
     try:
