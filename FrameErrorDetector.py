@@ -26,6 +26,10 @@ class FrameErrorDetector(VideoScanner):
                                           scan_list=self.video_frame_scan_list,
                                           frame_error_dict=list_of_detected_frame_drops,
                                           frame_rate=frames_per_second)
+            store_data_in_json(video_file_path=self.video_file_path,
+                               expected_amount_of_frames=self.expected_amount_of_frames,
+                               scan_list=self.video_frame_scan_list,
+                               frame_error_dict=list_of_detected_frame_drops)
             return list_of_detected_frame_drops
         elif frames_per_second == 59.94:
             list_of_detected_frame_drops = self.__list_video_frame_errors_59_fps()
@@ -87,19 +91,21 @@ class FrameErrorDetector(VideoScanner):
         for current_frame in range(1, self.expected_amount_of_frames + 1):
             occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 1:
-                dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                time_code = calc_current_time_code(current_frame, frame_rate=60)
+                dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
     def __list_video_frame_errors_59_fps(self):
         """
-                Lists every frame error that happens during recording of video playback in 59.94 fps.
-                :return: Returns a list with all dropped or duplicated video frames.
-                """
+        Lists every frame error that happens during recording of video playback in 59.94 fps.
+        :return: Returns a list with all dropped or duplicated video frames.
+        """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
             occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2:
-                dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                time_code = calc_current_time_code(current_frame, frame_rate=59.94)
+                dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
 
         return dictionary_of_frame_errors
 
@@ -118,9 +124,11 @@ class FrameErrorDetector(VideoScanner):
                 if occurrence_of_current_frame == 2:
                     if occurrence_of_previous_frame != 1 and occurrence_of_next_frame != 1 \
                             and current_frame != self.expected_amount_of_frames and current_frame - 1 != 0:
-                        dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                        time_code = calc_current_time_code(current_frame, frame_rate=50)
+                        dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
                 else:
-                    dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                    time_code = calc_current_time_code(current_frame, frame_rate=50)
+                    dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
     def __list_video_frame_errors_30_fps(self):
@@ -132,7 +140,8 @@ class FrameErrorDetector(VideoScanner):
         for current_frame in range(1, self.expected_amount_of_frames + 1):
             occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 2:
-                dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                time_code = calc_current_time_code(current_frame, frame_rate=30)
+                dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
     def __list_video_frame_errors_29_fps(self):
@@ -145,7 +154,8 @@ class FrameErrorDetector(VideoScanner):
             occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
             if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2 \
                     and occurrence_of_current_frame != 3:
-                dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                time_code = calc_current_time_code(current_frame, frame_rate=29.97)
+                dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
 
         return dictionary_of_frame_errors
 
@@ -164,9 +174,11 @@ class FrameErrorDetector(VideoScanner):
                 if occurrence_of_current_frame == 3:
                     if occurrence_of_previous_frame != 2 and occurrence_of_next_frame != 2 \
                             and current_frame != self.expected_amount_of_frames and current_frame - 1 != 0:
-                        dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                        time_code = calc_current_time_code(current_frame, frame_rate=25)
+                        dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
                 else:
-                    dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                    time_code = calc_current_time_code(current_frame, frame_rate=25)
+                    dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
     def __list_video_frame_errors_24_fps(self):
@@ -184,7 +196,9 @@ class FrameErrorDetector(VideoScanner):
                 if occurrence_of_current_frame == 3:
                     if occurrence_of_previous_frame != (2 or 3) and occurrence_of_next_frame != (2 or 3) \
                             and current_frame != self.expected_amount_of_frames and current_frame - 1 != 0:
-                        dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                        time_code = calc_current_time_code(current_frame, frame_rate=24)
+                        dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
                 else:
-                    dictionary_of_frame_errors[current_frame] = occurrence_of_current_frame
+                    time_code = calc_current_time_code(current_frame, frame_rate=24)
+                    dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
