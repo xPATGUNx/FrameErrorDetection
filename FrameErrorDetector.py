@@ -16,69 +16,103 @@ class FrameErrorDetector(VideoScanner):
         :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         self.scan_video_frames_for_id(crop_video=crop_video)
-        test_data_file_writer(video_file_path=self.video_file_path,
-                              expected_amount_of_frames=self.expected_amount_of_frames,
-                              scan_list=self.video_frame_scan_list)
         if frames_per_second == 60:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_60_fps()
-            quality_metrics_report_writer(video_file_path=self.video_file_path,
-                                          expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops,
-                                          frame_rate=frames_per_second)
-            store_data_in_json(video_file_path=self.video_file_path,
-                               expected_amount_of_frames=self.expected_amount_of_frames,
-                               scan_list=self.video_frame_scan_list,
-                               frame_error_dict=list_of_detected_frame_drops)
-            return list_of_detected_frame_drops
+            list_of_detected_frame_errors = self.__list_video_frame_errors_60_fps()
+            total_amount_of_frame_errors = len(list_of_detected_frame_errors)
+            total_amount_of_frame_drops = len(self.frame_drop_index_list)
+            generate_report_data(video_file_path=self.video_file_path,
+                                 expected_amount_of_frames=self.expected_amount_of_frames,
+                                 scan_list=self.video_frame_scan_list,
+                                 frame_error_dict=list_of_detected_frame_errors,
+                                 frame_rate=frames_per_second,
+                                 frame_errors=total_amount_of_frame_errors,
+                                 frame_drops=total_amount_of_frame_drops,
+                                 frame_occurrences=self.dict_of_frame_occurrences)
+            return list_of_detected_frame_errors
+
         elif frames_per_second == 59.94:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_59_fps()
-            quality_metrics_report_writer(video_file_path=self.video_file_path,
-                                          expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops,
-                                          frame_rate=frames_per_second)
-            return list_of_detected_frame_drops
+            list_of_detected_frame_errors = self.__list_video_frame_errors_59_fps()
+            total_amount_of_frame_errors = len(list_of_detected_frame_errors)
+            total_amount_of_frame_drops = len(self.frame_drop_index_list)
+            generate_report_data(video_file_path=self.video_file_path,
+                                 expected_amount_of_frames=self.expected_amount_of_frames,
+                                 scan_list=self.video_frame_scan_list,
+                                 frame_error_dict=list_of_detected_frame_errors,
+                                 frame_rate=frames_per_second,
+                                 frame_errors=total_amount_of_frame_errors,
+                                 frame_drops=total_amount_of_frame_drops,
+                                 frame_occurrences=self.dict_of_frame_occurrences)
+            return list_of_detected_frame_errors
+
         elif frames_per_second == 50:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_50_fps()
-            quality_metrics_report_writer(video_file_path=self.video_file_path,
-                                          expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops,
-                                          frame_rate=frames_per_second)
-            return list_of_detected_frame_drops
+            list_of_detected_frame_errors = self.__list_video_frame_errors_50_fps()
+            total_amount_of_frame_errors = len(list_of_detected_frame_errors)
+            total_amount_of_frame_drops = len(self.frame_drop_index_list)
+            generate_report_data(video_file_path=self.video_file_path,
+                                 expected_amount_of_frames=self.expected_amount_of_frames,
+                                 scan_list=self.video_frame_scan_list,
+                                 frame_error_dict=list_of_detected_frame_errors,
+                                 frame_rate=frames_per_second,
+                                 frame_errors=total_amount_of_frame_errors,
+                                 frame_drops=total_amount_of_frame_drops,
+                                 frame_occurrences=self.dict_of_frame_occurrences)
+            return list_of_detected_frame_errors
+
         elif frames_per_second == 30:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_30_fps()
-            quality_metrics_report_writer(video_file_path=self.video_file_path,
-                                          expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops,
-                                          frame_rate=frames_per_second)
-            return list_of_detected_frame_drops
+            list_of_detected_frame_errors = self.__list_video_frame_errors_30_fps()
+            total_amount_of_frame_errors = len(list_of_detected_frame_errors)
+            total_amount_of_frame_drops = len(self.frame_drop_index_list)
+            generate_report_data(video_file_path=self.video_file_path,
+                                 expected_amount_of_frames=self.expected_amount_of_frames,
+                                 scan_list=self.video_frame_scan_list,
+                                 frame_error_dict=list_of_detected_frame_errors,
+                                 frame_rate=frames_per_second,
+                                 frame_errors=total_amount_of_frame_errors,
+                                 frame_drops=total_amount_of_frame_drops,
+                                 frame_occurrences=self.dict_of_frame_occurrences)
+            return list_of_detected_frame_errors
+
         elif frames_per_second == 29.97:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_29_fps()
-            quality_metrics_report_writer(video_file_path=self.video_file_path,
-                                          expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops,
-                                          frame_rate=frames_per_second)
-            return list_of_detected_frame_drops
+            list_of_detected_frame_errors = self.__list_video_frame_errors_29_fps()
+            total_amount_of_frame_errors = len(list_of_detected_frame_errors)
+            total_amount_of_frame_drops = len(self.frame_drop_index_list)
+            generate_report_data(video_file_path=self.video_file_path,
+                                 expected_amount_of_frames=self.expected_amount_of_frames,
+                                 scan_list=self.video_frame_scan_list,
+                                 frame_error_dict=list_of_detected_frame_errors,
+                                 frame_rate=frames_per_second,
+                                 frame_errors=total_amount_of_frame_errors,
+                                 frame_drops=total_amount_of_frame_drops,
+                                 frame_occurrences=self.dict_of_frame_occurrences)
+            return list_of_detected_frame_errors
+
         elif frames_per_second == 25:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_25_fps()
-            quality_metrics_report_writer(video_file_path=self.video_file_path,
-                                          expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops,
-                                          frame_rate=frames_per_second)
-            return list_of_detected_frame_drops
+            list_of_detected_frame_errors = self.__list_video_frame_errors_25_fps()
+            total_amount_of_frame_errors = len(list_of_detected_frame_errors)
+            total_amount_of_frame_drops = len(self.frame_drop_index_list)
+            generate_report_data(video_file_path=self.video_file_path,
+                                 expected_amount_of_frames=self.expected_amount_of_frames,
+                                 scan_list=self.video_frame_scan_list,
+                                 frame_error_dict=list_of_detected_frame_errors,
+                                 frame_rate=frames_per_second,
+                                 frame_errors=total_amount_of_frame_errors,
+                                 frame_drops=total_amount_of_frame_drops,
+                                 frame_occurrences=self.dict_of_frame_occurrences)
+            return list_of_detected_frame_errors
+
         elif frames_per_second == 24:
-            list_of_detected_frame_drops = self.__list_video_frame_errors_24_fps()
-            quality_metrics_report_writer(video_file_path=self.video_file_path,
-                                          expected_amount_of_frames=self.expected_amount_of_frames,
-                                          scan_list=self.video_frame_scan_list,
-                                          frame_error_dict=list_of_detected_frame_drops,
-                                          frame_rate=frames_per_second)
-            return list_of_detected_frame_drops
+            list_of_detected_frame_errors = self.__list_video_frame_errors_24_fps()
+            total_amount_of_frame_errors = len(list_of_detected_frame_errors)
+            total_amount_of_frame_drops = len(self.frame_drop_index_list)
+            generate_report_data(video_file_path=self.video_file_path,
+                                 expected_amount_of_frames=self.expected_amount_of_frames,
+                                 scan_list=self.video_frame_scan_list,
+                                 frame_error_dict=list_of_detected_frame_errors,
+                                 frame_rate=frames_per_second,
+                                 frame_errors=total_amount_of_frame_errors,
+                                 frame_drops=total_amount_of_frame_drops,
+                                 frame_occurrences=self.dict_of_frame_occurrences)
+            return list_of_detected_frame_errors
         else:
             raise Exception(str(frames_per_second) + ' is a not supported framerate or a typo.')
 

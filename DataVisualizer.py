@@ -1,3 +1,4 @@
+import os.path
 import matplotlib.pyplot as plt
 import math
 import numpy as np
@@ -6,19 +7,20 @@ import numpy as np
 class DataVisualizer:
 
     def __init__(self):
+        self.report_dir = ''
         self.file_name = ''
         self.dictionary_of_frame_occurrences = {}
         self.expected_amount_of_frames = 0
-        self.displayed_frames = 0
         self.frame_errors = 0
         self.frame_drops = 0
 
-    def set_parameters(self, *, file_name: str, dictionary_of_frame_occurrences: dict, expected_amount_of_frames: int,
-                       displayed_frames: int, frame_errors: int, frame_drops: int) -> None:
-        self.file_name = file_name
+    def set_parameters(self, *, report_dir: str, video_file_path: str, dictionary_of_frame_occurrences: dict,
+                       expected_amount_of_frames: int,
+                       frame_errors: int, frame_drops: int) -> None:
+        self.report_dir = report_dir
+        self.file_name = video_file_path
         self.dictionary_of_frame_occurrences = dictionary_of_frame_occurrences
         self.expected_amount_of_frames = expected_amount_of_frames
-        self.displayed_frames = displayed_frames
         self.frame_errors = frame_errors
         self.frame_drops = frame_drops
 
@@ -34,14 +36,15 @@ class DataVisualizer:
         plt.xlabel('Frame')
         plt.ylabel('Occurrence')
         plt.axis([0, len(x), 0, 8])
-        fig = plt.gcf()
-        fig.set_size_inches(18.5, 10.5)
-        path = 'Reports/Data/Visual Graphs/Occurrence Graphs/Occurrence Graph ' + str(self.file_name) + '.png'
-        fig.savefig(path, dpi=100)
+
+        base_name = os.path.basename(self.file_name)
+        file_name = f'Occurrence Graph {base_name}.png'
+        path = os.path.join(self.report_dir, file_name)
+        self.plot_graphic(path)
 
     def visualize_video_stats(self):
-
-        percentage_of_displayed = (self.displayed_frames / self.expected_amount_of_frames) * 100
+        displayed_frames = self.expected_amount_of_frames - self.frame_drops
+        percentage_of_displayed = (displayed_frames / self.expected_amount_of_frames) * 100
         percentage_of_errors = (self.frame_errors / self.expected_amount_of_frames) * 100
         percentage_of_drops = (self.frame_drops / self.expected_amount_of_frames) * 100
 
@@ -61,7 +64,13 @@ class DataVisualizer:
         ax.set_xlabel('Amount of frames in %')
         ax.set_title('Frame Display Stats')
 
+        base_name = os.path.basename(self.file_name)
+        file_name = f'Frame Stats {base_name}.png'
+        path = os.path.join(self.report_dir, file_name)
+        self.plot_graphic(path)
+
+    @staticmethod
+    def plot_graphic(path: str, width: float = 18.5, height: float = 10.5):
         fig = plt.gcf()
-        fig.set_size_inches(18.5, 10.5)
-        path = 'Reports/Data/Visual Graphs/Frame Stats/Frame Stats ' + str(self.file_name) + '.png'
+        fig.set_size_inches(width, height)
         fig.savefig(path, dpi=100)
