@@ -1,0 +1,23 @@
+{
+    "title": "Report for 2021-09-21 10-56-18.mp4",
+    "total amount of frame errors": 3,
+    "total amount of frame drops": 1,
+    "detected frame errors": {
+        "4376": [
+            2,
+            "0:1:12:916"
+        ],
+        "4378": [
+            2,
+            "0:1:12:950"
+        ],
+        "4379": [
+            0,
+            "0:1:12:966"
+        ]
+    },
+    "distences between frame errors": [
+        "Distance between frame error 4376 and 4378: 2",
+        "Distance between frame error 4378 and 4379: 1"
+    ]
+}

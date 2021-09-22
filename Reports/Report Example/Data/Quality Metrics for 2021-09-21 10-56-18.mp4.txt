@@ -1,0 +1,14 @@
+Quality Metrics for "2021-09-21 10-56-18.mp4":
+
+Total amount of frame errors: 3
+
+Amount of dropped frames: 1
+
+Detected frame errors:
+Frame 4376 occurred 2 times. Time Code position: 0:1:12:916
+Frame 4378 occurred 2 times. Time Code position: 0:1:12:950
+Frame 4379 occurred 0 times. Time Code position: 0:1:12:966
+
+Distances between frame errors:
+Distance between frame error 4376 and 4378: 2
+Distance between frame error 4378 and 4379: 1
