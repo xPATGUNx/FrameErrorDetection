@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Frame Error Test Report Example</title>
+    <style>
+        html *
+            {
+               color: dimgrey;
+               font-family: Courier,serif !important;
+            }
+        h3 {
+            font-size: 100%;
+        }
+        hr {
+            border-top: 1px dashed grey;
+        }
+        img {
+           width: 100%;
+           margin-left: -10%;
+        }
+        .dataCell{
+            vertical-align: top;
+        }
+        .headline {
+            background-color: cornflowerblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="headline">
+        <h1 style="color: aliceblue; margin-left: 1%">Frame Error Test Report Example</h1>
+        <hr>
+    </div>
+
+    <div class="stats" style="font-size: larger">
+        <table style="width: 60%; font-size: x-large">
+            <tr>
+                <td>&#10071; Total amount of frame errors: 3</td>
+                <td>&#10060; Amount of dropped frames: 1</td>
+            </tr>
+        </table>
+        <hr>
+    </div>
+
+    <div class="visual">
+        <table style="width: 100%">
+            <tr>
+                <td>Graph of frame occurrences:</td>
+                <td>Display stats:</td>
+            </tr>
+            <tr>
+                <td><img src="Data/Occurrence%20Graph%202021-09-21%2010-56-18.mp4.png" alt="Occurence Graph"></td>
+                <td><img src="Data/Frame%20Stats%202021-09-21%2010-56-18.mp4.png" alt="Frame Stats"></td>
+            </tr>
+        </table>
+        <hr>
+    </div>
+
+    <div class="dataDisplay" style="width: 100%; height: 250px; resize: vertical; overflow: auto">
+        <table>
+            <tr>
+                <td class="dataCell">
+                    <table>
+                        <tr>
+                            <th>Detected Frame Errors:</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>Frame 4376 occurred 2 times. Time Code position: 0:1:12:916</li>
+                                    <li>Frame 4376 occurred 2 times. Time Code position: 0:1:12:916</li>
+                                    <li>Frame 4376 occurred 2 times. Time Code position: 0:1:12:916</li>
+                                    <li>Frame 4376 occurred 2 times. Time Code position: 0:1:12:916</li>
+                                    <li>Frame 4376 occurred 2 times. Time Code position: 0:1:12:916</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="dataCell">
+                    <table>
+                        <tr>
+                            <th>Distances between frame errors:</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>Distance between frame error 4376 and 4378: 2</li>
+                                    <li>Distance between frame error 4376 and 4378: 2</li>
+                                    <li>Distance between frame error 4376 and 4378: 2</li>
+                                    <li>Distance between frame error 4376 and 4378: 2</li>
+                                    <li>Distance between frame error 4376 and 4378: 2</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="dataCell">
+                    <table>
+                        <tr>
+                            <th>Detected frames:</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>Frame 1 occurred 1 times.</li>
+                                    <li>Frame 2 occurred 1 times.</li>
+                                    <li>Frame 3 occurred 1 times.</li>
+                                    <li>Frame 4 occurred 1 times.</li>
+                                    <li>Frame 5 occurred 1 times.</li>
+                                    <li>Frame 6 occurred 1 times.</li>
+                                    <li>Frame 7 occurred 1 times.</li>
+                                    <li>Frame 8 occurred 1 times.</li>
+                                    <li>Frame 9 occurred 1 times.</li>
+                                    <li>Frame 10 occurred 1 times.</li>
+                                    <li>Frame 11 occurred 1 times.</li>
+                                    <li>Frame 12 occurred 1 times.</li>
+                                    <li>Frame 13 occurred 1 times.</li>
+                                    <li>Frame 14 occurred 1 times.</li>
+                                    <li>Frame 15 occurred 1 times.</li>
+                                    <li>Frame 16 occurred 1 times.</li>
+                                    <li>Frame 17 occurred 1 times.</li>
+                                    <li>Frame 18 occurred 1 times.</li>
+                                    <li>Frame 19 occurred 1 times.</li>
+                                    <li>Frame 20 occurred 1 times.</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="video">
+        <hr>
+        <p>Recording footage:</p>
+        <video width="100%" controls>
+        <source src="Data/2021-09-21 10-56-18.mp4" type="video/mp4">
+        Your browser does not support HTML video.
+        </video>
+    </div>
+</body>
+</html>
