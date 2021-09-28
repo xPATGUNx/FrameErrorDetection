@@ -37,8 +37,7 @@ class DataVisualizer:
         plt.ylabel('Occurrence')
         plt.axis([0, len(x), 0, 8])
 
-        base_name = os.path.basename(self.file_name)
-        file_name = f'Occurrence Graph {base_name}.png'
+        file_name = f'Occurrence Graph.png'
         path = os.path.join(self.report_dir, file_name)
         self.plot_graphic(path)
 
@@ -64,8 +63,7 @@ class DataVisualizer:
         ax.set_xlabel('Amount of frames in %')
         ax.set_title('Frame Display Stats')
 
-        base_name = os.path.basename(self.file_name)
-        file_name = f'Frame Stats {base_name}.png'
+        file_name = f'Frame Stats.png'
         path = os.path.join(self.report_dir, file_name)
         self.plot_graphic(path)
 

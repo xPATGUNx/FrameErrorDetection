@@ -2,7 +2,9 @@ import json
 import os
 import time
 from DataVisualizer import *
+from shutil import copy
 from Utils import calc_current_time_code
+from WebPageGenerator import *
 
 
 def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int, scan_list: list,
@@ -15,6 +17,8 @@ def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int
     path_to_data = 'Data'
     data_folder = os.path.join(path_to_report, path_to_data)
     os.mkdir(data_folder)
+
+    copy_recorded_video_to_report_dir(video_file_path, data_folder)
 
     test_data_file_writer(report_dir=data_folder, video_file_path=video_file_path,
                           expected_amount_of_frames=expected_amount_of_frames,
@@ -36,6 +40,8 @@ def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int
                                    frame_drops=frame_drops)
     data_visualizer.visualize_frame_scan()
     data_visualizer.visualize_video_stats()
+
+    generate_html_report(report_dir=report_dir, data_dir=data_folder)
 
 
 def test_data_file_writer(*, report_dir: str, video_file_path: str, expected_amount_of_frames: int, scan_list: list):
@@ -160,12 +166,17 @@ def store_data_in_json(*, report_dir: str, video_file_path: str, expected_amount
     frame_drop_index_list = list_frame_drops(expected_amount_of_frames=expected_amount_of_frames, scan_list=scan_list)
     frame_drop_distance_list = list_frame_error_distances(frame_error_dict=frame_error_dict)
     total_amount_of_frame_drops = len(frame_drop_index_list)
+    scan_results_list = []
+    for current_frame in range(1, expected_amount_of_frames + 1):
+        occurrence = scan_list.count(current_frame)
+        scan_results_list.append(f'Frame {current_frame} occurred {occurrence} times.')
     content = {
         'title': report_title,
         'total amount of frame errors': total_amount_of_errors,
         'total amount of frame drops': total_amount_of_frame_drops,
         'detected frame errors': frame_error_dict,
-        'distances between frame errors': frame_drop_distance_list
+        'distances between frame errors': frame_drop_distance_list,
+        'scan results': scan_results_list
     }
     json_string = json.dumps(content, indent=4)
     try:
@@ -173,3 +184,7 @@ def store_data_in_json(*, report_dir: str, video_file_path: str, expected_amount
             json_file_writer.writelines(json_string)
     finally:
         json_file_writer.close()
+
+
+def copy_recorded_video_to_report_dir(path_to_video: str, path_to_report_dir: str):
+    copy(path_to_video, path_to_report_dir)
