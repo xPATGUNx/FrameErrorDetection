@@ -4,7 +4,7 @@ import time
 from DataVisualizer import *
 from shutil import copy
 from Utils import calc_current_time_code
-from WebPageGenerator import *
+from WebPageGenerator import generate_html_report
 
 
 def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int, scan_list: list,
@@ -174,6 +174,7 @@ def store_data_in_json(*, report_dir: str, video_file_path: str, expected_amount
         'title': report_title,
         'total amount of frame errors': total_amount_of_errors,
         'total amount of frame drops': total_amount_of_frame_drops,
+        'expected amount of frames': expected_amount_of_frames,
         'detected frame errors': frame_error_dict,
         'distances between frame errors': frame_drop_distance_list,
         'scan results': scan_results_list

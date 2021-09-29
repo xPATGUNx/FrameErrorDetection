@@ -1,5 +1,3 @@
-import pathlib
-
 from airium import Airium
 from airium import from_html_to_airium
 import json
@@ -13,7 +11,8 @@ def create_html_report_from_python(*, title_of_test_run: str,
                                    path_to_video: str,
                                    dict_of_frame_errors: dict,
                                    list_of_frame_error_distances: list,
-                                   list_of_scan_results: list):
+                                   list_of_scan_results: list,
+                                   expected_amount_of_frames: int):
     a = Airium()
 
     a('<!DOCTYPE html>')
@@ -48,10 +47,16 @@ def create_html_report_from_python(*, title_of_test_run: str,
                 a.h1(style='color: aliceblue; margin-left: 1%', _t=title_of_test_run)
                 a.hr()
             with a.div(klass='stats', style='font-size: larger'):
-                with a.table(style='width: 60%; font-size: x-large'):
+                with a.table(style='width: 100%; font-size: x-large'):
                     with a.tr():
-                        a.td(_t=f'&#10071 Total amount of frame errors: {amount_of_frame_errors}')
-                        a.td(_t=f'&#10060 Amount of dropped frames: {amount_of_frame_drops}')
+                        if amount_of_frame_errors != 0:
+                            a.td(_t=f'&#10071 Total amount of frame errors: {amount_of_frame_errors}')
+                            a.td(_t=f'&#10060 Amount of dropped frames: {amount_of_frame_drops}')
+                            a.td(_t=f'&#127909 Expected amount of frames: {expected_amount_of_frames}')
+                        else:
+                            a.td(_t=f'&#9989 Total amount of frame errors: {amount_of_frame_errors}')
+                            a.td(_t=f'&#9989 Amount of dropped frames: {amount_of_frame_drops}')
+                            a.td(_t=f'&#127909 Expected amount of frames: {expected_amount_of_frames}')
                 a.hr()
             with a.div(klass='visual'):
                 with a.table(style='width: 100%'):
@@ -74,9 +79,12 @@ def create_html_report_from_python(*, title_of_test_run: str,
                                 with a.tr():
                                     with a.td():
                                         with a.ul():
-                                            for key, value in dict_of_frame_errors.items():
-                                                a.li(_t=f'Frame {key} occurred {value[0]} times. '
-                                                        f'Time Code position: {value[1]}')
+                                            if len(dict_of_frame_errors) != 0:
+                                                for key, value in dict_of_frame_errors.items():
+                                                    a.li(_t=f'Frame {key} occurred {value[0]} times. '
+                                                            f'Time Code position: {value[1]}.')
+                                            else:
+                                                a.li(_t=f'No Frame Errors detected.')
                         with a.td(klass='dataCell'):
                             with a.table():
                                 with a.tr():
@@ -84,8 +92,11 @@ def create_html_report_from_python(*, title_of_test_run: str,
                                 with a.tr():
                                     with a.td():
                                         with a.ul():
-                                            for distance_of_error in list_of_frame_error_distances:
-                                                a.li(_t=f'{distance_of_error}')
+                                            if len(list_of_frame_error_distances) != 0:
+                                                for distance_of_error in list_of_frame_error_distances:
+                                                    a.li(_t=f'{distance_of_error}')
+                                            else:
+                                                a.li(_t=f'')
                         with a.td(klass='dataCell'):
                             with a.table():
                                 with a.tr():
@@ -93,8 +104,11 @@ def create_html_report_from_python(*, title_of_test_run: str,
                                 with a.tr():
                                     with a.td():
                                         with a.ul():
-                                            for scan_result in list_of_scan_results:
-                                                a.li(_t=f'{scan_result}')
+                                            if len(list_of_frame_error_distances) != 0:
+                                                for scan_result in list_of_scan_results:
+                                                    a.li(_t=f'{scan_result}')
+                                            else:
+                                                a.li(_t=f'')
             with a.div(klass='video'):
                 a.hr()
                 a.p(_t='Recording footage:')
@@ -131,6 +145,7 @@ def generate_html_report(report_dir: str, data_dir: str):
     report_title = test_data['title']
     amount_of_errors = test_data['total amount of frame errors']
     amount_of_drops = test_data['total amount of frame drops']
+    expected_amount_of_frames = test_data['expected amount of frames']
     frame_error_dict = test_data['detected frame errors']
     distances_list = test_data['distances between frame errors']
     scan_results_list = test_data['scan results']
@@ -138,6 +153,7 @@ def generate_html_report(report_dir: str, data_dir: str):
     html = create_html_report_from_python(title_of_test_run=report_title,
                                           amount_of_frame_errors=amount_of_errors,
                                           amount_of_frame_drops=amount_of_drops,
+                                          expected_amount_of_frames=expected_amount_of_frames,
                                           path_to_video=path_to_video,
                                           dict_of_frame_errors=frame_error_dict,
                                           list_of_frame_error_distances=distances_list,
