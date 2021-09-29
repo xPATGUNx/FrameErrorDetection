@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 
+# TODO: Add Pydoc
 class DataVisualizer:
 
     def __init__(self):

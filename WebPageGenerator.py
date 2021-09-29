@@ -5,6 +5,7 @@ import glob
 import os
 
 
+# TODO: Add Pydoc
 def create_html_report_from_python(*, title_of_test_run: str,
                                    amount_of_frame_errors: int,
                                    amount_of_frame_drops: int,
@@ -121,6 +122,7 @@ def create_html_report_from_python(*, title_of_test_run: str,
     return html
 
 
+# TODO: Add Pydoc
 def read_json_file(path_to_file):
     with open(path_to_file, 'r') as json_reader:
         json_file = json_reader.read()
@@ -128,6 +130,7 @@ def read_json_file(path_to_file):
         return content
 
 
+# TODO: Add Pydoc
 def generate_html_report(report_dir: str, data_dir: str):
     json_file = '*.json'
     path_to_json = os.path.join(data_dir, json_file)

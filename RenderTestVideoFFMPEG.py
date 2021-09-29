@@ -4,6 +4,7 @@ import subprocess
 from QRCodeTools import generate_qr_codes, delete_generated_qr_codes
 
 
+# TODO: Add Pydoc
 def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: int, format_profile: str = None,
                       format_level: str = None):
     total_amount_of_frames = get_total_amount_of_frames_from_video(path_to_video)
@@ -39,6 +40,7 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
         pass_command(ffmpeg_command)
 
 
+# TODO: Add Pydoc
 def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000,
                         scale_of_qr_code_image: int = 40):
     amount_of_leading_zeros = len(str(total_amount_of_frames))
@@ -59,6 +61,7 @@ def pass_command(cmd_line: str):
     subprocess.check_output(cmd_line, shell=True)
 
 
+# TODO: Add Pydoc
 def get_total_amount_of_frames_from_video(path_to_video: str):
     cap = cv.VideoCapture(path_to_video)
     total_amount_of_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))

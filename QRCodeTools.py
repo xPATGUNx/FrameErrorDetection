@@ -7,6 +7,7 @@ from PIL import Image
 import numpy as np
 
 
+# TODO: Add Pydoc
 def generate_qr_codes(frames, *, img_scale: int = 5):
     print('Beginning QR-Code generation...')
     leading_zeros = len(str(frames))
@@ -19,11 +20,13 @@ def generate_qr_codes(frames, *, img_scale: int = 5):
     print('QR-Codes have been generated for ' + str(frame + 1) + ' frames.')
 
 
+# TODO: Add Pydoc
 def delete_generated_qr_codes():
     for filename in glob.glob('Images/*.png'):
         os.remove(filename)
 
 
+# TODO: Add Pydoc
 def qr_code_scanner(frame: np.ndarray, return_position: bool = False):
     """
     A simple QR-Code scanner that can be used to either read the QR-Code or simply return its position.
