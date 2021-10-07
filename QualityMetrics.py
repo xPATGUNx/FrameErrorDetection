@@ -34,8 +34,8 @@ def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int
                        frame_error_dict=frame_error_dict)
 
     data_visualizer = DataVisualizer()
-    data_visualizer.set_parameters(report_dir=data_folder, video_file_path=video_file_path,
-                                   dictionary_of_frame_occurrences=frame_occurrences,
+    data_visualizer.set_parameters(report_dir=data_folder,
+                                   dictionary_of_frame_occurrences=frame_occurrences_dict,
                                    expected_amount_of_frames=expected_amount_of_frames,
                                    frame_errors=frame_errors,
                                    frame_drops=frame_drops)
