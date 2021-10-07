@@ -4,9 +4,10 @@ import math
 import numpy as np
 
 
-# TODO: Add Pydoc
 class DataVisualizer:
-
+    """
+    Class for visualisation of test data.
+    """
     def __init__(self):
         self.report_dir = ''
         self.file_name = ''
@@ -18,6 +19,14 @@ class DataVisualizer:
     def set_parameters(self, *, report_dir: str, dictionary_of_frame_occurrences: dict,
                        expected_amount_of_frames: int,
                        frame_errors: int, frame_drops: int) -> None:
+        """
+        Setter function for class variables.
+        :param report_dir: A string of the desired path of report storage
+        :param dictionary_of_frame_occurrences: A dictionary containing all detected frames.
+        :param expected_amount_of_frames: An integer representing the total amount of expected frames.
+        :param frame_errors: An integer of the total amount of detected frame errors.
+        :param frame_drops: An integer of the total amount of detected frame drops.
+        """
         self.report_dir = report_dir
         self.dictionary_of_frame_occurrences = dictionary_of_frame_occurrences
         self.expected_amount_of_frames = expected_amount_of_frames
@@ -25,6 +34,10 @@ class DataVisualizer:
         self.frame_drops = frame_drops
 
     def visualize_frame_scan(self):
+        """
+        Use this function to plot a visualisation of the frame scan results as a line graph.
+        Plot will be saved as a PNG file in the set report directory.
+        """
         scan_dict = self.dictionary_of_frame_occurrences
         x = scan_dict.keys()
         y = scan_dict.values()
@@ -42,6 +55,10 @@ class DataVisualizer:
         self._plot_graphic(path)
 
     def visualize_video_stats(self):
+        """
+        Use this function to plot a visualisation of the frame stats as a bar graph.
+        Plot will be saved as a PNG file in the set report directory.
+        """
         displayed_frames = self.expected_amount_of_frames - self.frame_drops
         percentage_of_displayed = (displayed_frames / self.expected_amount_of_frames) * 100
         percentage_of_errors = (self.frame_errors / self.expected_amount_of_frames) * 100

@@ -9,7 +9,19 @@ from WebPageGenerator import generate_html_report
 
 # TODO: Add Pydoc
 def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int, scan_list: list,
-                         frame_error_dict: dict, frame_rate: float, frame_errors, frame_drops, frame_occurrences):
+                         frame_error_dict: dict, frame_rate: float, frame_errors: int, frame_drops: int,
+                         frame_occurrences_dict):
+    """
+    Generates a complete report folder containing all data from a given test run.
+    :param video_file_path: A path string to the recorded video.
+    :param expected_amount_of_frames: An integer of the total amount of expected video frames.
+    :param scan_list: A list containing the index of every scanned frame.
+    :param frame_error_dict: A dictionary containing all frame errors and their timecodes.
+    :param frame_rate: A float of the given frame rate of video playback.
+    :param frame_errors: An integer of the total amount of counted frame errors.
+    :param frame_drops: An integer of the total amount of counted frame drops.
+    :param frame_occurrences_dict: A dictionary containing the occurrence count of every frame.
+    """
     base_name = os.path.basename(video_file_path)
     parent_dir = 'Reports'
     report_dir = f'Report for {base_name}'
@@ -115,7 +127,6 @@ def index_of_first_frame_error(scan_list):
     return first_frame_error
 
 
-# TODO: Add Pydoc
 def quality_metrics_report_writer(*, report_dir: str, video_file_path: str, expected_amount_of_frames: int,
                                   scan_list: list, frame_error_dict: dict, frame_rate: float):
     """
@@ -161,6 +172,14 @@ def quality_metrics_report_writer(*, report_dir: str, video_file_path: str, expe
 # TODO: Add Pydoc
 def store_data_in_json(*, report_dir: str, video_file_path: str, expected_amount_of_frames: int, scan_list,
                        frame_error_dict):
+    """
+    Stores all resulting data in a dedicated json file.
+    :param report_dir: Path string to directory of storage.
+    :param video_file_path: A path string to the recorded video.
+    :param expected_amount_of_frames: An integer of the total amount of expected frames.
+    :param scan_list: A list containing all detected frames.
+    :param frame_error_dict: A dictionary containing the index of all frame errors.
+    """
     base_name = os.path.basename(video_file_path)
     json_file_name = f'Report-data-for-{base_name}.json'
     json_file_dir = os.path.join(report_dir, json_file_name)
@@ -190,6 +209,5 @@ def store_data_in_json(*, report_dir: str, video_file_path: str, expected_amount
         json_file_writer.close()
 
 
-# TODO: Add Pydoc
 def copy_recorded_video_to_report_dir(path_to_video: str, path_to_report_dir: str):
     copy(path_to_video, path_to_report_dir)
