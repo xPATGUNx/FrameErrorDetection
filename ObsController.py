@@ -48,7 +48,7 @@ class ObsController:
         Call this function to change the scene in OBS.
         :param name_of_scene: A string containing the exact name of the scene you want to change to.
         """
-        self.web_socket.call(requests.SetCurrentScene(scene_name=name_of_scene))
+        self.web_socket.call(requests.SetCurrentSceneCollection(sc_name=name_of_scene))
 
     def set_profile(self, profile_name):
         """

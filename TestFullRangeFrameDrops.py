@@ -7,7 +7,8 @@ from QualityMetrics import generate_report_data
 
 
 def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frames: int,
-                          recording_frame_rate: str = '60FPS', playback_frame_rate: float, recording_length: int):
+                          recording_frame_rate: str = '60FPS', recording_scene: str = 'BMD 60 FPS',
+                          playback_frame_rate: float, recording_length: int):
     """
     Main function to perform a video capture test for frame errors.
     :param video_directory_path: A string containing the path to the video capture directory.
@@ -29,6 +30,8 @@ def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frame
         obs.connect_with_obs()
         obs.set_profile(recording_frame_rate)
         time.sleep(3)
+        obs.change_scene(recording_scene)
+        time.sleep(1)
         obs.set_video_directory(path=video_directory_path)
         obs.record(recording_length)
     finally:
