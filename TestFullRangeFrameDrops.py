@@ -3,6 +3,7 @@ import os
 import time
 from FrameErrorDetector import FrameErrorDetector
 from ObsController import ObsController
+from QualityMetrics import generate_report_data
 
 
 def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frames: int,
@@ -40,4 +41,15 @@ def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frame
     frame_error_detector.set_video_analysis_parameters(latest_video_capture, expected_amount_of_frames)
     detected_frame_errors = frame_error_detector.frame_error_detection(crop_video=True,
                                                                        frames_per_second=playback_frame_rate)
+
+    total_amount_of_frame_errors = len(detected_frame_errors)
+    total_amount_of_frame_drops = len(frame_error_detector.frame_drop_index_list)
+    generate_report_data(video_file_path=frame_error_detector.video_file_path,
+                         expected_amount_of_frames=frame_error_detector.expected_amount_of_frames,
+                         scan_list=frame_error_detector.video_frame_scan_list,
+                         frame_error_dict=detected_frame_errors,
+                         frame_rate=playback_frame_rate,
+                         frame_errors=total_amount_of_frame_errors,
+                         frame_drops=total_amount_of_frame_drops,
+                         frame_occurrences_dict=frame_error_detector.dict_of_frame_occurrences)
     return detected_frame_errors
