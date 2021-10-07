@@ -6,6 +6,7 @@ class FrameErrorDetector(VideoScanner):
     def __init__(self):
         super().__init__()
 
+    # TODO: Refactor return statements to dictionaries
     def frame_error_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
         Core function to detect frame drops & frame duplicates in a video file.
