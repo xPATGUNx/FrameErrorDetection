@@ -40,7 +40,7 @@ class DataVisualizer:
 
         file_name = f'Occurrence Graph.png'
         path = os.path.join(self.report_dir, file_name)
-        self.plot_graphic(path)
+        self._plot_graphic(path)
 
     def visualize_video_stats(self):
         displayed_frames = self.expected_amount_of_frames - self.frame_drops
@@ -66,10 +66,10 @@ class DataVisualizer:
 
         file_name = f'Frame Stats.png'
         path = os.path.join(self.report_dir, file_name)
-        self.plot_graphic(path)
+        self._plot_graphic(path)
 
     @staticmethod
-    def plot_graphic(path: str, width: float = 18.5, height: float = 10.5):
+    def _plot_graphic(path: str, width: float = 18.5, height: float = 10.5):
         fig = plt.gcf()
         fig.set_size_inches(width, height)
         fig.savefig(path, dpi=100)
