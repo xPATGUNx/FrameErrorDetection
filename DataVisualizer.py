@@ -15,11 +15,10 @@ class DataVisualizer:
         self.frame_errors = 0
         self.frame_drops = 0
 
-    def set_parameters(self, *, report_dir: str, video_file_path: str, dictionary_of_frame_occurrences: dict,
+    def set_parameters(self, *, report_dir: str, dictionary_of_frame_occurrences: dict,
                        expected_amount_of_frames: int,
                        frame_errors: int, frame_drops: int) -> None:
         self.report_dir = report_dir
-        self.file_name = video_file_path
         self.dictionary_of_frame_occurrences = dictionary_of_frame_occurrences
         self.expected_amount_of_frames = expected_amount_of_frames
         self.frame_errors = frame_errors
