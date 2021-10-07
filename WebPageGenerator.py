@@ -93,7 +93,7 @@ def create_html_report_from_python(*, title_of_test_run: str,
                                 with a.tr():
                                     with a.td():
                                         with a.ul():
-                                            if len(list_of_frame_error_distances) != 0:
+                                            if list_of_frame_error_distances is not None:
                                                 for distance_of_error in list_of_frame_error_distances:
                                                     a.li(_t=f'{distance_of_error}')
                                             else:
@@ -105,7 +105,7 @@ def create_html_report_from_python(*, title_of_test_run: str,
                                 with a.tr():
                                     with a.td():
                                         with a.ul():
-                                            if len(list_of_frame_error_distances) != 0:
+                                            if list_of_frame_error_distances is not None:
                                                 for scan_result in list_of_scan_results:
                                                     a.li(_t=f'{scan_result}')
                                             else:
