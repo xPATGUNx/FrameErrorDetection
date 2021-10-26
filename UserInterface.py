@@ -87,6 +87,8 @@ class Form(QDialog):
                                   playback_frame_rate=playback_frame_rate,
                                   recording_length=recording_length)
 
+            print('Test run completed.')
+
     def button_state(self, button):
         if button.text() == 'Blackmagic Design Intensity Pro 4k':
             if button.isChecked():

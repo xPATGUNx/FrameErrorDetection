@@ -7,7 +7,6 @@ from Utils import calc_current_time_code
 from WebPageGenerator import generate_html_report
 
 
-# TODO: Add Pydoc
 def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int, scan_list: list,
                          frame_error_dict: dict, frame_rate: float, frame_errors: int, frame_drops: int,
                          frame_occurrences_dict):
@@ -55,6 +54,8 @@ def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int
     data_visualizer.visualize_video_stats()
 
     generate_html_report(report_dir=report_dir, data_dir=data_folder)
+
+    print(f'"{report_dir}" has been created.')
 
 
 def test_data_file_writer(*, report_dir: str, video_file_path: str, expected_amount_of_frames: int, scan_list: list):
@@ -169,7 +170,6 @@ def quality_metrics_report_writer(*, report_dir: str, video_file_path: str, expe
         metric_report_writer.close()
 
 
-# TODO: Add Pydoc
 def store_data_in_json(*, report_dir: str, video_file_path: str, expected_amount_of_frames: int, scan_list,
                        frame_error_dict):
     """
