@@ -10,7 +10,7 @@ class Form(QDialog):
         super(Form, self).__init__(parent)
         # Create widgets
         self.capture_path_label = QLabel('Path to video capture directory:')
-        self.capture_path = QLineEdit('D:/Captured Video')
+        self.capture_path = QLineEdit('D:\Captured Video')
 
         self.expected_frames_label = QLabel('Total amount of expected video frames:')
         self.expected_frames = QLineEdit('5000')
