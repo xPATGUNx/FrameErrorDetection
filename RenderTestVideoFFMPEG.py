@@ -39,6 +39,9 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
         print(ffmpeg_command)
         pass_command(ffmpeg_command)
 
+    print('Video render done.')
+    print(f'Location of rendered video: Frame Drop Detection/{name_of_rendered_video}')
+
 
 # TODO: Add Pydoc
 def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000,
