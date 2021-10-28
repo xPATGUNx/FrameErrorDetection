@@ -1,7 +1,7 @@
 import sys
 from TestFullRangeFrameDrops import test_for_frame_errors
 from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout, QDialog, QLabel, QComboBox,
-                               QRadioButton)
+                               QRadioButton, QCheckBox)
 
 
 class Form(QDialog):
@@ -10,7 +10,7 @@ class Form(QDialog):
         super(Form, self).__init__(parent)
         # Create widgets
         self.capture_path_label = QLabel('Path to video capture directory:')
-        self.capture_path = QLineEdit('D:\Captured Video')
+        self.capture_path = QLineEdit(r'D:\Captured Video')
 
         self.expected_frames_label = QLabel('Total amount of expected video frames:')
         self.expected_frames = QLineEdit('5000')
@@ -32,6 +32,8 @@ class Form(QDialog):
         self.length_of_recording_label = QLabel('Duration of recording in seconds:')
         self.length_of_recording = QLineEdit('100')
 
+        self.open_report_after_run_radio_button = QCheckBox('Open report after test run')
+
         self.button = QPushButton('Run Test')
 
         # Create layout and add widgets
@@ -50,6 +52,7 @@ class Form(QDialog):
         layout.addWidget(self.playback_frame_rate)
         layout.addWidget(self.length_of_recording_label)
         layout.addWidget(self.length_of_recording)
+        layout.addWidget(self.open_report_after_run_radio_button)
         layout.addWidget(self.button)
         # Set dialog layout
         self.setLayout(layout)
@@ -66,12 +69,17 @@ class Form(QDialog):
             capture_path = self.capture_path.text()
             print(f'Exptected amount of Frames: {self.expected_frames.text()}')
             expected_frames = int(self.expected_frames.text())
-            print(f'Recording frame rate: {self.recording_framerate.currentText()}')
+            print(f'Recording frame rate: {self.recording_framerate.currentText()} FPS')
             recording_frame_rate = self.recording_framerate.currentText()
             print(f'Playback frame rate: {self.playback_frame_rate.text()}')
             playback_frame_rate = int(self.playback_frame_rate.text())
             print(f'Length of recording: {self.length_of_recording.text()} seconds')
             recording_length = int(self.length_of_recording.text())
+
+            if self.open_report_after_run_radio_button.isChecked() is True:
+                open_report = True
+            else:
+                open_report = False
 
             if self.recording_device_bmd.isChecked() is True:
                 print(f'Selected recording device: {self.recording_device_bmd.text()}')
@@ -85,7 +93,8 @@ class Form(QDialog):
                                   recording_frame_rate=recording_frame_rate,
                                   recording_scene=recording_scene,
                                   playback_frame_rate=playback_frame_rate,
-                                  recording_length=recording_length)
+                                  recording_length=recording_length,
+                                  open_report=open_report)
 
             print('Test run completed.')
 

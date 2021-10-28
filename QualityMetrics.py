@@ -9,9 +9,10 @@ from WebPageGenerator import generate_html_report
 
 def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int, scan_list: list,
                          frame_error_dict: dict, frame_rate: float, frame_errors: int, frame_drops: int,
-                         frame_occurrences_dict):
+                         frame_occurrences_dict, open_report: bool):
     """
     Generates a complete report folder containing all data from a given test run.
+    :param open_report: boolean to toggle the opening of the test report.
     :param video_file_path: A path string to the recorded video.
     :param expected_amount_of_frames: An integer of the total amount of expected video frames.
     :param scan_list: A list containing the index of every scanned frame.
@@ -53,9 +54,10 @@ def generate_report_data(*, video_file_path: str, expected_amount_of_frames: int
     data_visualizer.visualize_frame_scan()
     data_visualizer.visualize_video_stats()
 
-    generate_html_report(report_dir=report_dir, data_dir=data_folder)
+    generate_html_report(report_dir=report_dir, data_dir=data_folder, open_report=open_report)
 
-    print(f'"{report_dir}" has been created.')
+    absolute_path_to_report = os.path.abspath(path_to_report)
+    print(f'Report has been created at "{absolute_path_to_report}".')
 
 
 def test_data_file_writer(*, report_dir: str, video_file_path: str, expected_amount_of_frames: int, scan_list: list):
@@ -78,7 +80,6 @@ def test_data_file_writer(*, report_dir: str, video_file_path: str, expected_amo
     not_readable_frames = scan_list.count('QR code was not readable.')
     scan_data.write('QR code was not readable for ' + str(not_readable_frames) + ' frames.')
     scan_data.close()
-    print('"' + scan_data_name + '"' + ' has been created.\n')
 
 
 def list_frame_drops(*, expected_amount_of_frames: int, scan_list: list):

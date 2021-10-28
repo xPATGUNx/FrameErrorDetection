@@ -3,6 +3,7 @@ from airium import from_html_to_airium
 import json
 import glob
 import os
+import webbrowser
 
 
 # TODO: Add Pydoc
@@ -131,7 +132,7 @@ def read_json_file(path_to_file):
 
 
 # TODO: Add Pydoc
-def generate_html_report(report_dir: str, data_dir: str):
+def generate_html_report(report_dir: str, data_dir: str, open_report: bool):
     json_file = '*.json'
     path_to_json = os.path.join(data_dir, json_file)
     for file in glob.glob(path_to_json):
@@ -171,6 +172,8 @@ def generate_html_report(report_dir: str, data_dir: str):
             for lines in html:
                 html_writer.write(lines)
     finally:
+        if open_report is True:
+            webbrowser.open('file://' + os.path.realpath(html_report_path))
         html_writer.close()
 
 
