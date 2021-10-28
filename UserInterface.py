@@ -29,9 +29,6 @@ class Form(QDialog):
         self.playback_frame_rate_label = QLabel('Framerate of video playback:')
         self.playback_frame_rate = QLineEdit('60')
 
-        self.length_of_recording_label = QLabel('Duration of recording in seconds:')
-        self.length_of_recording = QLineEdit('100')
-
         self.open_report_after_run_radio_button = QCheckBox('Open report after test run')
 
         self.button = QPushButton('Run Test')
@@ -50,8 +47,6 @@ class Form(QDialog):
         self.recording_device_bmd.setChecked(True)
         layout.addWidget(self.playback_frame_rate_label)
         layout.addWidget(self.playback_frame_rate)
-        layout.addWidget(self.length_of_recording_label)
-        layout.addWidget(self.length_of_recording)
         layout.addWidget(self.open_report_after_run_radio_button)
         layout.addWidget(self.button)
         # Set dialog layout
@@ -73,8 +68,6 @@ class Form(QDialog):
             recording_frame_rate = self.recording_framerate.currentText()
             print(f'Playback frame rate: {self.playback_frame_rate.text()}')
             playback_frame_rate = int(self.playback_frame_rate.text())
-            print(f'Length of recording: {self.length_of_recording.text()} seconds')
-            recording_length = int(self.length_of_recording.text())
 
             if self.open_report_after_run_radio_button.isChecked() is True:
                 open_report = True
@@ -87,6 +80,9 @@ class Form(QDialog):
             if self.recording_device_elgato.isChecked() is True:
                 print(f'Selected recording device: {self.recording_device_elgato.text()}')
                 recording_scene = f'Elgato {playback_frame_rate} FPS'
+
+            additional_recording_time = 15
+            recording_length = int(expected_frames / playback_frame_rate + additional_recording_time)
 
             test_for_frame_errors(video_directory_path=capture_path,
                                   expected_amount_of_frames=expected_frames,
