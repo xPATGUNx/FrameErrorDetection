@@ -41,8 +41,6 @@ class Form(QDialog):
         qr_code_offset = self.qr_offset.text()
         render_test_video(path_to_video=video_path, frame_rate=frame_rate, qr_code_offset=qr_code_offset)
 
-    def print_test(self):
-        print('lel')
 
 if __name__ == '__main__':
     # Create the Qt Application
