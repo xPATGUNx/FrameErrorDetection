@@ -9,7 +9,7 @@ from WebPageGenerator import generate_html_report
 
 def generate_report_data(*, name_of_test_run: str, video_file_path: str, expected_amount_of_frames: int,
                          scan_list: list, frame_error_dict: dict, frame_rate: float, frame_errors: int,
-                         frame_drops: int, frame_occurrences_dict, open_report: bool):
+                         frame_drops: int, frame_occurrences_dict, open_report: bool, report_path: str):
     """
     Generates a complete report folder containing all data from a given test run.
     :param name_of_test_run: A string of the name or tag of current test run.
@@ -23,7 +23,7 @@ def generate_report_data(*, name_of_test_run: str, video_file_path: str, expecte
     :param frame_drops: An integer of the total amount of counted frame drops.
     :param frame_occurrences_dict: A dictionary containing the occurrence count of every frame.
     """
-    parent_dir = 'Reports'
+    parent_dir = report_path
     report_dir = f'Report for {name_of_test_run}'
     path_to_report = os.path.join(parent_dir, report_dir)
     os.mkdir(path_to_report)
@@ -57,7 +57,7 @@ def generate_report_data(*, name_of_test_run: str, video_file_path: str, expecte
     data_visualizer.visualize_frame_scan()
     data_visualizer.visualize_video_stats()
 
-    generate_html_report(report_dir=report_dir, data_dir=data_folder, open_report=open_report)
+    generate_html_report(report_dir=path_to_report, data_dir=data_folder, open_report=open_report)
 
     absolute_path_to_report = os.path.abspath(path_to_report)
     print(f'Report has been created at "{absolute_path_to_report}".')

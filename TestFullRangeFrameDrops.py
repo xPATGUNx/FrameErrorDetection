@@ -8,7 +8,8 @@ from QualityMetrics import generate_report_data
 
 def test_for_frame_errors(*, name_of_test_run: str, video_directory_path: str, expected_amount_of_frames: int,
                           recording_frame_rate: str = '60FPS', recording_scene: str = 'BMD 60 FPS',
-                          playback_frame_rate: float, recording_length: int, open_report: bool = False):
+                          playback_frame_rate: float, recording_length: int, open_report: bool = False,
+                          report_path: str):
     """
     Main function to perform a video capture test for frame errors.
     :param video_directory_path: A string containing the path to the video capture directory.
@@ -56,5 +57,6 @@ def test_for_frame_errors(*, name_of_test_run: str, video_directory_path: str, e
                          frame_errors=total_amount_of_frame_errors,
                          frame_drops=total_amount_of_frame_drops,
                          frame_occurrences_dict=frame_error_detector.dict_of_frame_occurrences,
-                         open_report=open_report)
+                         open_report=open_report,
+                         report_path=report_path)
     return detected_frame_errors

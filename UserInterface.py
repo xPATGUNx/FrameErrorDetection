@@ -2,7 +2,7 @@ import sys
 import time
 from TestFullRangeFrameDrops import test_for_frame_errors
 from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout, QDialog, QLabel, QComboBox,
-                               QRadioButton, QCheckBox)
+                               QRadioButton, QCheckBox, QFileDialog)
 
 
 class Form(QDialog):
@@ -12,6 +12,10 @@ class Form(QDialog):
         # Create widgets
         self.test_run_name_label = QLabel('Name/Tag of test run:')
         self.test_run_name = QLineEdit('FED Test Run')
+
+        self.report_path_label = QLabel('Path to report storage:')
+        self.report_path = QLineEdit(r'D:\Reports')
+        self.report_path_select_button = QPushButton('Select Directory')
 
         self.capture_path_label = QLabel('Path to video capture directory:')
         self.capture_path = QLineEdit(r'D:\Captured Video')
@@ -41,6 +45,9 @@ class Form(QDialog):
         layout = QVBoxLayout()
         layout.addWidget(self.test_run_name_label)
         layout.addWidget(self.test_run_name)
+        layout.addWidget(self.report_path_label)
+        layout.addWidget(self.report_path)
+        layout.addWidget(self.report_path_select_button)
         layout.addWidget(self.capture_path_label)
         layout.addWidget(self.capture_path)
         layout.addWidget(self.expected_frames_label)
@@ -50,15 +57,17 @@ class Form(QDialog):
         layout.addWidget(self.recording_device_label)
         layout.addWidget(self.recording_device_bmd)
         layout.addWidget(self.recording_device_elgato)
-        self.recording_device_bmd.setChecked(True)
         layout.addWidget(self.playback_frame_rate_label)
         layout.addWidget(self.playback_frame_rate)
         layout.addWidget(self.open_report_after_run_radio_button)
         layout.addWidget(self.button)
         # Set dialog layout
         self.setLayout(layout)
+
+        self.recording_device_bmd.setChecked(True)
         # Add button signal to greetings slot
         self.button.clicked.connect(self.execute_test_run)
+        self.report_path_select_button.clicked.connect(self.select_report_dir)
 
     # Greets the user
     def execute_test_run(self):
@@ -69,6 +78,8 @@ class Form(QDialog):
             timestr: str = time.strftime("%Y %m %d-%H%M%S")
             test_name = f'{self.test_run_name.text()} {timestr}'
             print(f'Name/Tag of test run: {test_name}')
+            path_to_report_storage = self.report_path.text()
+            print(f'Path to report storage: {path_to_report_storage}')
             capture_path = self.capture_path.text()
             print(f'Capture path: {capture_path}')
             expected_frames = int(self.expected_frames.text())
@@ -100,9 +111,14 @@ class Form(QDialog):
                                   recording_scene=recording_scene,
                                   playback_frame_rate=playback_frame_rate,
                                   recording_length=recording_length,
-                                  open_report=open_report)
+                                  open_report=open_report,
+                                  report_path=path_to_report_storage)
 
             print('Test run completed.')
+
+    def select_report_dir(self):
+        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.report_path.setText(directory)
 
     def button_state(self, button):
         if button.text() == 'Blackmagic Design Intensity Pro 4k':

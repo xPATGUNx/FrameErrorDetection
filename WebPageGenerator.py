@@ -163,10 +163,9 @@ def generate_html_report(report_dir: str, data_dir: str, open_report: bool):
                                           list_of_frame_error_distances=distances_list,
                                           list_of_scan_results=scan_results_list)
 
-    report_root = 'Reports'
     report_data_dir = report_dir
     html_report_file_name = 'Report.html'
-    html_report_path = os.path.join(report_root, report_data_dir, html_report_file_name)
+    html_report_path = os.path.join(report_data_dir, html_report_file_name)
     try:
         with open(html_report_path, 'w') as html_writer:
             for lines in html:
