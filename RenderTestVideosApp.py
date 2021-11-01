@@ -1,6 +1,6 @@
 import sys
 from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout, QDialog, QLabel)
-from RenderTestVideoFFMPEG import render_test_video
+from Python.RenderTestVideoFFMPEG import render_test_video
 
 
 class Form(QDialog):

@@ -1,5 +1,5 @@
-from QualityMetrics import *
-from VideoScanner import VideoScanner
+from Python.QualityMetrics import *
+from Python.VideoScanner import VideoScanner
 
 
 class FrameErrorDetector(VideoScanner):

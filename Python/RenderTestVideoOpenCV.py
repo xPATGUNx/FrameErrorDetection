@@ -3,7 +3,7 @@ import numpy as np
 import glob
 import os
 import time
-from QRCodeTools import generate_qr_codes
+from Python.QRCodeTools import generate_qr_codes
 
 
 # TODO: Add Pydoc

@@ -1,5 +1,5 @@
 import unittest
-from VideoScanner import VideoScanner
+from Python.VideoScanner import VideoScanner
 
 
 class TestFrameDropDetection(unittest.TestCase):

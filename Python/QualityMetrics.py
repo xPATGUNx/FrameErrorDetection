@@ -1,10 +1,10 @@
 import json
 import os
 import time
-from DataVisualizer import *
+from Python.DataVisualizer import *
 from shutil import copy
-from Utils import calc_current_time_code
-from WebPageGenerator import generate_html_report
+from Python.Utils import calc_current_time_code
+from Python.WebPageGenerator import generate_html_report
 
 
 def generate_report_data(*, name_of_test_run: str, video_file_path: str, expected_amount_of_frames: int,

@@ -1,9 +1,9 @@
 import glob
 import os
 import time
-from FrameErrorDetector import FrameErrorDetector
-from ObsController import ObsController
-from QualityMetrics import generate_report_data
+from Python.FrameErrorDetector import FrameErrorDetector
+from Python.ObsController import ObsController
+from Python.QualityMetrics import generate_report_data
 
 
 def test_for_frame_errors(*, name_of_test_run: str, video_directory_path: str, expected_amount_of_frames: int,

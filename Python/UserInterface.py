@@ -1,6 +1,6 @@
 import sys
 import time
-from TestFullRangeFrameDrops import test_for_frame_errors
+from Python.TestFullRangeFrameDrops import test_for_frame_errors
 from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout, QDialog, QLabel, QComboBox,
                                QRadioButton, QCheckBox, QFileDialog)
 

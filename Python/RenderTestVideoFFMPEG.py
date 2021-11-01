@@ -1,7 +1,7 @@
 import cv2 as cv
 import os
 import subprocess
-from QRCodeTools import generate_qr_codes, delete_generated_qr_codes
+from Python.QRCodeTools import generate_qr_codes, delete_generated_qr_codes
 
 
 # TODO: Add Pydoc
@@ -77,4 +77,4 @@ if __name__ == '__main__':
 
     # render_test_video('Video/Videos_in_different_Framerates/ft-60.mp4', frame_rate=60, qr_code_offset=20,
     #                   format_profile='main', format_level='4.0')
-    render_qr_code_clip('Rendered_Videos/test_qr_clip.mp4', frame_rate=60, total_amount_of_frames=1000)
+    render_qr_code_clip('../Rendered_Videos/test_qr_clip.mp4', frame_rate=60, total_amount_of_frames=1000)

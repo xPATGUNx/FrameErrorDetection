@@ -1,5 +1,5 @@
 import unittest
-from TestFullRangeFrameDrops import *
+from Python.TestFullRangeFrameDrops import *
 
 
 # TODO: Add Pydoc
