@@ -19,6 +19,7 @@ class Form(QDialog):
 
         self.capture_path_label = QLabel('Path to video capture directory:')
         self.capture_path = QLineEdit(r'D:\Captured Video')
+        self.capture_path_select_button = QPushButton('Select Directory')
 
         self.expected_frames_label = QLabel('Total amount of expected video frames:')
         self.expected_frames = QLineEdit('5000')
@@ -50,6 +51,7 @@ class Form(QDialog):
         layout.addWidget(self.report_path_select_button)
         layout.addWidget(self.capture_path_label)
         layout.addWidget(self.capture_path)
+        layout.addWidget(self.capture_path_select_button)
         layout.addWidget(self.expected_frames_label)
         layout.addWidget(self.expected_frames)
         layout.addWidget(self.recording_framerate_label)
@@ -68,6 +70,7 @@ class Form(QDialog):
         # Add button signal to greetings slot
         self.button.clicked.connect(self.execute_test_run)
         self.report_path_select_button.clicked.connect(self.select_report_dir)
+        self.capture_path_select_button.clicked.connect(self.select_capture_dir)
 
     # Greets the user
     def execute_test_run(self):
@@ -119,6 +122,10 @@ class Form(QDialog):
     def select_report_dir(self):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.report_path.setText(directory)
+
+    def select_capture_dir(self):
+        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.capture_path.setText(directory)
 
     def button_state(self, button):
         if button.text() == 'Blackmagic Design Intensity Pro 4k':
