@@ -6,7 +6,7 @@ from ObsController import ObsController
 from QualityMetrics import generate_report_data
 
 
-def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frames: int,
+def test_for_frame_errors(*, name_of_test_run: str, video_directory_path: str, expected_amount_of_frames: int,
                           recording_frame_rate: str = '60FPS', recording_scene: str = 'BMD 60 FPS',
                           playback_frame_rate: float, recording_length: int, open_report: bool = False):
     """
@@ -47,7 +47,8 @@ def test_for_frame_errors(*, video_directory_path: str, expected_amount_of_frame
 
     total_amount_of_frame_errors = len(detected_frame_errors)
     total_amount_of_frame_drops = len(frame_error_detector.frame_drop_index_list)
-    generate_report_data(video_file_path=frame_error_detector.video_file_path,
+    generate_report_data(name_of_test_run=name_of_test_run,
+                         video_file_path=frame_error_detector.video_file_path,
                          expected_amount_of_frames=frame_error_detector.expected_amount_of_frames,
                          scan_list=frame_error_detector.video_frame_scan_list,
                          frame_error_dict=detected_frame_errors,

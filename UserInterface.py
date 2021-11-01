@@ -1,4 +1,5 @@
 import sys
+import time
 from TestFullRangeFrameDrops import test_for_frame_errors
 from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout, QDialog, QLabel, QComboBox,
                                QRadioButton, QCheckBox)
@@ -9,6 +10,9 @@ class Form(QDialog):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
         # Create widgets
+        self.test_run_name_label = QLabel('Name/Tag of test run:')
+        self.test_run_name = QLineEdit('FED Test Run')
+
         self.capture_path_label = QLabel('Path to video capture directory:')
         self.capture_path = QLineEdit(r'D:\Captured Video')
 
@@ -35,6 +39,8 @@ class Form(QDialog):
 
         # Create layout and add widgets
         layout = QVBoxLayout()
+        layout.addWidget(self.test_run_name_label)
+        layout.addWidget(self.test_run_name)
         layout.addWidget(self.capture_path_label)
         layout.addWidget(self.capture_path)
         layout.addWidget(self.expected_frames_label)
@@ -60,14 +66,17 @@ class Form(QDialog):
             print('No capture device has been selected. Please select one to execute the test.')
 
         else:
-            print(f'Capture path: {self.capture_path.text()}')
+            timestr: str = time.strftime("%Y %m %d-%H%M%S")
+            test_name = f'{self.test_run_name.text()} {timestr}'
+            print(f'Name/Tag of test run: {test_name}')
             capture_path = self.capture_path.text()
-            print(f'Exptected amount of Frames: {self.expected_frames.text()}')
+            print(f'Capture path: {capture_path}')
             expected_frames = int(self.expected_frames.text())
-            print(f'Recording frame rate: {self.recording_framerate.currentText()} FPS')
+            print(f'Exptected amount of Frames: {expected_frames}')
             recording_frame_rate = self.recording_framerate.currentText()
-            print(f'Playback frame rate: {self.playback_frame_rate.text()}')
+            print(f'Recording frame rate: {recording_frame_rate} FPS')
             playback_frame_rate = int(self.playback_frame_rate.text())
+            print(f'Playback frame rate: {playback_frame_rate}')
 
             if self.open_report_after_run_radio_button.isChecked() is True:
                 open_report = True
@@ -84,7 +93,8 @@ class Form(QDialog):
             additional_recording_time = 15
             recording_length = int(expected_frames / playback_frame_rate + additional_recording_time)
 
-            test_for_frame_errors(video_directory_path=capture_path,
+            test_for_frame_errors(name_of_test_run=test_name,
+                                  video_directory_path=capture_path,
                                   expected_amount_of_frames=expected_frames,
                                   recording_frame_rate=recording_frame_rate,
                                   recording_scene=recording_scene,
