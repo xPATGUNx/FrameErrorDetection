@@ -445,7 +445,3 @@ def test_html_to_py():
 
     py_str = from_html_to_airium(html_str)
     print(py_str)
-
-
-# test_html_to_py()
-# test_py_to_html()
