@@ -18,7 +18,7 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
     generate_qr_codes(total_amount_of_frames)
 
     if format_profile and format_level is not None:
-        ffmpeg_command = f'ffmpeg -r {frame_rate} -i {path_to_video} ' \
+        ffmpeg_command = f'ffmpeg -r {frame_rate} -i "{path_to_video}" ' \
                          f'-r {frame_rate} -i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png ' \
                          f'-filter_complex "[0:v][1:v] ' \
                          f'overlay={qr_code_offset}:{qr_code_offset}" ' \
@@ -30,7 +30,7 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
         pass_command(ffmpeg_command)
 
     else:
-        ffmpeg_command = f'ffmpeg -r {frame_rate} -i {path_to_video} ' \
+        ffmpeg_command = f'ffmpeg -r {frame_rate} -i "{path_to_video}" ' \
                          f'-r {frame_rate} -i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png ' \
                          f'-filter_complex "[0:v][1:v] ' \
                          f'overlay={qr_code_offset}:{qr_code_offset}" {name_of_rendered_video} ' \
