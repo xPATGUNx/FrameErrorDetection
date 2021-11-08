@@ -17,7 +17,7 @@ def generate_qr_codes(frames: int, *, img_scale: int = 5):
     leading_zeros = len(str(frames))
     format_str = '0' + str(leading_zeros) + 'd'
     for frame in range(frames):
-        print('Frame: ' + str(frame))
+        print('Frame: ' + str(frame + 1))
         qr = pyqrcode.create(frame + 1)
         img_name = f'Images/QR_Code_Frame_{frame + 1:{format_str}}.png'
         qr.png(img_name, scale=img_scale)
