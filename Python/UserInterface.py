@@ -134,13 +134,3 @@ class Form(QDialog):
         elif button.text() == 'Elgato Game Capture 4k60 Pro':
             if button.isChecked():
                 self.recording_device_bmd.setChecked(False)
-
-
-if __name__ == '__main__':
-    # Create the Qt Application
-    app = QApplication(sys.argv)
-    # Create and show the form
-    form = Form()
-    form.show()
-    # Run the main Qt loop
-    sys.exit(app.exec())
