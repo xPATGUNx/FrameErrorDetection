@@ -71,10 +71,3 @@ def get_total_amount_of_frames_from_video(path_to_video: str):
     print(total_amount_of_frames)
 
     return total_amount_of_frames
-
-
-if __name__ == '__main__':
-
-    # render_test_video('Video/Videos_in_different_Framerates/ft-60.mp4', frame_rate=60, qr_code_offset=20,
-    #                   format_profile='main', format_level='4.0')
-    render_qr_code_clip('../Rendered_Videos/test_qr_clip.mp4', frame_rate=60, total_amount_of_frames=1000)
