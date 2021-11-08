@@ -51,6 +51,3 @@ def qr_code_scanner(frame: np.ndarray, return_position: bool = False):
             # print(data)
             return data
 
-
-if __name__ == '__main__':
-    generate_qr_codes(frames=5000)
