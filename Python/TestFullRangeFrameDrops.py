@@ -14,11 +14,24 @@ def test_for_frame_errors(*, name_of_test_run: str, video_directory_path: str, e
     Main function to perform a video capture test for frame errors.
     :param video_directory_path: A string containing the path to the video capture directory.
     :param expected_amount_of_frames: An integer of the total amount of expected frames.
+
     :param recording_frame_rate:
     This parameter sets via a String the recording frame rate by changing the current profile in OBS.
     Currently available profile are: '60FPS', '59.94FPS', '50FPS', '30FPS', '29.97FPS', '25FPS', '24FPS'.
+
+    :param recording_scene:
+    Sets the recording scene in OBS. Use this setting to switch between capture devices and their settings.
+    Currently available scenes are:
+    For Blackmagic Design Intensity Pro 4k:
+    'BMD 24 FPS', 'BMD 25 FPS', 'BMD 29.97 FPS', 'BMD 30 FPS', 'BMD 50 FPS', 'BMD 59.94 FPS', 'BMD 60 FPS'
+    For Elgato Game Capture 4K60Pro:
+    'Elgato 24 FPS', 'Elgato 25 FPS', 'Elgato 29.97 FPS', 'Elgato 30 FPS',
+    'Elgato 50 FPS', 'Elgato 59.94 FPS', 'Elgato 60 FPS'
+
     :param playback_frame_rate: A float value that has to be set equal to the frame rate of the video playback.
     :param recording_length: An integer that sets the length of recording in Seconds
+    :param open_report: A boolean that while being true triggers the opening of the report after a test run.
+    :param report_path: A path string to the directory of storage for the report.
     :return: Returns a dictionary with all dropped or duplicated video frames.
     """
 
