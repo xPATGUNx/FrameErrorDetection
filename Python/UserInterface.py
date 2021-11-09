@@ -5,7 +5,6 @@ from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout
                                QRadioButton, QCheckBox, QFileDialog)
 
 
-# TODO: Add PyDoc
 class UserInterface(QDialog):
     """
     A PyQT based class to build the main user interface for Frame Error Detection.
