@@ -3,10 +3,10 @@ from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout
 from Python.RenderTestVideoFFMPEG import render_test_video
 
 
-class Form(QDialog):
+class VideoRenderUI(QDialog):
 
     def __init__(self, parent=None):
-        super(Form, self).__init__(parent)
+        super(VideoRenderUI, self).__init__(parent)
         # Create widgets
         note = '(note: the path string is not allowed to contain blank spaces!)'
         self.path_to_video_label = QLabel(f'Enter path to video {note}:')
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # Create the Qt Application
     app = QApplication(sys.argv)
     # Create and show the form
-    form = Form()
-    form.show()
+    ui = VideoRenderUI()
+    ui.show()
     # Run the main Qt loop
     sys.exit(app.exec())
