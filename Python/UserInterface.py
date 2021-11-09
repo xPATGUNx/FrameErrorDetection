@@ -5,10 +5,11 @@ from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout
                                QRadioButton, QCheckBox, QFileDialog)
 
 
-class Form(QDialog):
+# TODO: Add PyDoc
+class UserInterface(QDialog):
 
     def __init__(self, parent=None):
-        super(Form, self).__init__(parent)
+        super(UserInterface, self).__init__(parent)
         # Create widgets
         self.test_run_name_label = QLabel('Name/Tag of test run:')
         self.test_run_name = QLineEdit('FED Test Run')
