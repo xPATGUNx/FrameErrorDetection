@@ -4,7 +4,9 @@ from Python.RenderTestVideoFFMPEG import render_test_video
 
 
 class VideoRenderUI(QDialog):
-
+    """
+    A PyQT based class to build the user interface for test video rendering.
+    """
     def __init__(self, parent=None):
         super(VideoRenderUI, self).__init__(parent)
         # Create widgets
@@ -38,6 +40,9 @@ class VideoRenderUI(QDialog):
         self.report_file_select_button.clicked.connect(self.select_file)
 
     def execute_video_render(self):
+        """
+        Executes the video render process.
+        """
 
         video_path = self.path_to_video.text()
         frame_rate = self.frame_rate.text()
@@ -45,6 +50,9 @@ class VideoRenderUI(QDialog):
         render_test_video(path_to_video=video_path, frame_rate=frame_rate, qr_code_offset=qr_code_offset)
 
     def select_file(self):
+        """
+        Triggers a select file system dialog.
+        """
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.AnyFile)
         directory = dialog.getOpenFileName(parent=self, caption='Open file', dir='.', filter='*.mp4')
@@ -52,10 +60,7 @@ class VideoRenderUI(QDialog):
 
 
 if __name__ == '__main__':
-    # Create the Qt Application
     app = QApplication(sys.argv)
-    # Create and show the form
     ui = VideoRenderUI()
     ui.show()
-    # Run the main Qt loop
     sys.exit(app.exec())

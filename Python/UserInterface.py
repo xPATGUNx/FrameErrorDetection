@@ -7,8 +7,13 @@ from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout
 
 # TODO: Add PyDoc
 class UserInterface(QDialog):
-
+    """
+    A PyQT based class to build the main user interface for Frame Error Detection.
+    """
     def __init__(self, parent=None):
+        """
+        Init function to instantiate every part of the UI.
+        """
         super(UserInterface, self).__init__(parent)
         # Create widgets
         self.test_run_name_label = QLabel('Name/Tag of test run:')
@@ -75,6 +80,9 @@ class UserInterface(QDialog):
 
     # Greets the user
     def execute_test_run(self):
+        """
+        Function to execute the test run with parameters set by the user.
+        """
         if self.recording_device_bmd.isChecked() is False and self.recording_device_elgato.isChecked() is False:
             print('No capture device has been selected. Please select one to execute the test.')
 
@@ -121,14 +129,24 @@ class UserInterface(QDialog):
             print('Test run completed.')
 
     def select_report_dir(self):
+        """
+        Triggers a select directory dialog.
+        """
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.report_path.setText(directory)
 
     def select_capture_dir(self):
+        """
+        Triggers a select directory dialog.
+        """
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.capture_path.setText(directory)
 
     def button_state(self, button):
+        """
+        Toggles the state of the selection buttons for the capture cards
+        :param button: A QRadioButton object.
+        """
         if button.text() == 'Blackmagic Design Intensity Pro 4k':
             if button.isChecked():
                 self.recording_device_elgato.setChecked(False)

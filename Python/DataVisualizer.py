@@ -86,6 +86,12 @@ class DataVisualizer:
 
     @staticmethod
     def _plot_graphic(path: str, width: float = 18.5, height: float = 10.5):
+        """
+        This function is called to plot the graphic.
+        :param path: a string of the path to save location.
+        :param width: a float value of the width of the image.
+        :param height: a float value of the height of the image.
+        """
         fig = plt.gcf()
         fig.set_size_inches(width, height)
         fig.savefig(path, dpi=100)

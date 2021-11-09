@@ -2,8 +2,10 @@ import unittest
 from Python.TestFullRangeFrameDrops import *
 
 
-# TODO: Add Pydoc
 class TestFrameDropDetection(unittest.TestCase):
+    """
+    An example python test class for a Frame Error Detection Test run.
+    """
     def test_video_capture_for_frame_drops(self):
         path = 'D:/Captured Video'      # Path to video capture directory
         expected_frames = 5000          # Total amount of expected video frames

@@ -6,7 +6,6 @@ import os
 import webbrowser
 
 
-# TODO: Add Pydoc
 def create_html_report_from_python(*, title_of_test_run: str,
                                    amount_of_frame_errors: int,
                                    amount_of_frame_drops: int,
@@ -15,6 +14,18 @@ def create_html_report_from_python(*, title_of_test_run: str,
                                    list_of_frame_error_distances: list,
                                    list_of_scan_results: list,
                                    expected_amount_of_frames: int):
+    """
+    Creates an HTML string based on the given parameters by using Airium.
+    :param title_of_test_run: A string of the test run / report title.
+    :param amount_of_frame_errors: An integer of the total amount of occurred frame errors.
+    :param amount_of_frame_drops: An integer of the total amount of occurred frame drops.
+    :param path_to_video: A string of the path to the recorded video.
+    :param dict_of_frame_errors: A dictionary containing every frame error index.
+    :param list_of_frame_error_distances: A list containing the distances between frame errors.
+    :param list_of_scan_results: A list containing all scanned frames.
+    :param expected_amount_of_frames: An integer of the total amount of expected frames.
+    :return: Returns an HTML string filled with the report content.
+    """
     a = Airium()
 
     a('<!DOCTYPE html>')
@@ -123,16 +134,25 @@ def create_html_report_from_python(*, title_of_test_run: str,
     return html
 
 
-# TODO: Add Pydoc
 def read_json_file(path_to_file):
+    """
+    Reads and loads content of a json file.
+    :param path_to_file: String of json file path.
+    :return: Returns content of json file.
+    """
     with open(path_to_file, 'r') as json_reader:
         json_file = json_reader.read()
         content = json.loads(json_file)
         return content
 
 
-# TODO: Add Pydoc
 def generate_html_report(report_dir: str, data_dir: str, open_report: bool):
+    """
+    Generates the report and stores it in an HTML file.
+    :param report_dir: Path string to the directory of the report save location.
+    :param data_dir: Path string of the data storage directory.
+    :param open_report: A boolean that opens the report after the test run if set true.
+    """
     json_file = '*.json'
     path_to_json = os.path.join(data_dir, json_file)
     for file in glob.glob(path_to_json):

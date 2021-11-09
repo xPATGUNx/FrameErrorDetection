@@ -6,7 +6,6 @@ import time
 from Python.QRCodeTools import generate_qr_codes
 
 
-# TODO: Add Pydoc
 def render_test_video(*, video_file_path, new_video_file_name=None, codec=None, custom_frame_rate=None):
     try:
         cap = cv.VideoCapture(video_file_path)
@@ -82,7 +81,6 @@ def render_test_video(*, video_file_path, new_video_file_name=None, codec=None, 
         # delete_temp_images()
 
 
-# TODO: Add Pydoc
 def delete_temp_images():
     print('Deleting temp files...')
     for filename in glob.glob('Images/*.png'):
