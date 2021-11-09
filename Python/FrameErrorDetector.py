@@ -6,7 +6,6 @@ class FrameErrorDetector(VideoScanner):
     def __init__(self):
         super().__init__()
 
-    # TODO: Refactor return statements to dictionaries
     def frame_error_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
         Core function to detect frame drops & frame duplicates in a video file.
@@ -18,39 +17,39 @@ class FrameErrorDetector(VideoScanner):
         """
         self.scan_video_frames_for_id(crop_video=crop_video)
         if frames_per_second == 60:
-            list_of_detected_frame_errors = self.__list_video_frame_errors_60_fps()
-            return list_of_detected_frame_errors
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_60_fps()
+            return dict_of_detected_frame_errors
 
         elif frames_per_second == 59.94:
-            list_of_detected_frame_errors = self.__list_video_frame_errors_59_fps()
-            return list_of_detected_frame_errors
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_59_fps()
+            return dict_of_detected_frame_errors
 
         elif frames_per_second == 50:
-            list_of_detected_frame_errors = self.__list_video_frame_errors_50_fps()
-            return list_of_detected_frame_errors
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_50_fps()
+            return dict_of_detected_frame_errors
 
         elif frames_per_second == 30:
-            list_of_detected_frame_errors = self.__list_video_frame_errors_30_fps()
-            return list_of_detected_frame_errors
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_30_fps()
+            return dict_of_detected_frame_errors
 
         elif frames_per_second == 29.97:
-            list_of_detected_frame_errors = self.__list_video_frame_errors_29_fps()
-            return list_of_detected_frame_errors
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_29_fps()
+            return dict_of_detected_frame_errors
 
         elif frames_per_second == 25:
-            list_of_detected_frame_errors = self.__list_video_frame_errors_25_fps()
-            return list_of_detected_frame_errors
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_25_fps()
+            return dict_of_detected_frame_errors
 
         elif frames_per_second == 24:
-            list_of_detected_frame_errors = self.__list_video_frame_errors_24_fps()
-            return list_of_detected_frame_errors
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_24_fps()
+            return dict_of_detected_frame_errors
         else:
             raise Exception(str(frames_per_second) + ' is a not supported framerate or a typo.')
 
-    def __list_video_frame_errors_60_fps(self):
+    def __create_frame_error_dictionary_60_fps(self):
         """
-        Every frame has to occur only once. Every anomaly gets listed by this function.
-        :return: Returns a list with all dropped or duplicated video frames.
+        Detects frame errors for projects with a playback frame rate of 60FPS.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
@@ -60,10 +59,10 @@ class FrameErrorDetector(VideoScanner):
                 dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
-    def __list_video_frame_errors_59_fps(self):
+    def __create_frame_error_dictionary_59_fps(self):
         """
-        Lists every frame error that happens during recording of video playback in 59.94 fps.
-        :return: Returns a list with all dropped or duplicated video frames.
+        Detects frame errors for projects with a playback frame rate of 59.94FPS.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
@@ -74,10 +73,10 @@ class FrameErrorDetector(VideoScanner):
 
         return dictionary_of_frame_errors
 
-    def __list_video_frame_errors_50_fps(self):
+    def __create_frame_error_dictionary_50_fps(self):
         """
-        Lists every frame error that happens during recording of video playback in 50 fps.
-        :return: Returns a list with all dropped or duplicated video frames.
+        Detects frame errors for projects with a playback frame rate of 50FPS.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
@@ -96,10 +95,10 @@ class FrameErrorDetector(VideoScanner):
                     dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
-    def __list_video_frame_errors_30_fps(self):
+    def __create_frame_error_dictionary_30_fps(self):
         """
-        Lists every frame error that happens during recording of video playback in 30 fps.
-        :return: Returns a list with all dropped or duplicated video frames.
+        Detects frame errors for projects with a playback frame rate of 30FPS.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
@@ -109,10 +108,10 @@ class FrameErrorDetector(VideoScanner):
                 dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
-    def __list_video_frame_errors_29_fps(self):
+    def __create_frame_error_dictionary_29_fps(self):
         """
-        Lists every frame error that happens during recording of video playback in 29.97 fps.
-        :return: Returns a list with all dropped or duplicated video frames.
+        Detects frame errors for projects with a playback frame rate of 29.97FPS.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
@@ -124,10 +123,10 @@ class FrameErrorDetector(VideoScanner):
 
         return dictionary_of_frame_errors
 
-    def __list_video_frame_errors_25_fps(self):
+    def __create_frame_error_dictionary_25_fps(self):
         """
-        Lists every frame error that happens during recording of video playback in 25 fps.
-        :return: Returns a list with all dropped or duplicated video frames.
+        Detects frame errors for projects with a playback frame rate of 25FPS.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
@@ -146,10 +145,10 @@ class FrameErrorDetector(VideoScanner):
                     dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
-    def __list_video_frame_errors_24_fps(self):
+    def __create_frame_error_dictionary_24_fps(self):
         """
-        Lists every frame error that happens during recording of video playback in 24 fps.
-        :return: Returns a list with all dropped or duplicated video frames.
+        Detects frame errors for projects with a playback frame rate of 24FPS.
+        :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
