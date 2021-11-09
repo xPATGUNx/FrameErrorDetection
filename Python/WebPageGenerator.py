@@ -1,5 +1,4 @@
 from airium import Airium
-from airium import from_html_to_airium
 import json
 import glob
 import os
