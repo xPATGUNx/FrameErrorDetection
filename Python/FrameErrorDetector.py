@@ -6,7 +6,12 @@ class FrameErrorDetector(VideoScanner):
     def __init__(self):
         super().__init__()
 
-    def frame_error_detection(self, *, crop_video: bool = True, frames_per_second: float = 60):
+    def frame_error_detection(self, *, crop_video: bool = True):
+        self.scan_video_frames_for_id(crop_video=crop_video)
+        dict_of_detected_frame_errors = self.__create_frame_error_dictionary()
+        return dict_of_detected_frame_errors
+
+    def frame_error_detection_for_consumer_case(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
         Core function to detect frame drops & frame duplicates in a video file.
         The validation of 59 and 29 fps needs further evaluation. For now it is seen as equal to either 60 or 30 fps.
@@ -17,7 +22,7 @@ class FrameErrorDetector(VideoScanner):
         """
         self.scan_video_frames_for_id(crop_video=crop_video)
         if frames_per_second == 60:
-            dict_of_detected_frame_errors = self.__create_frame_error_dictionary_60_fps()
+            dict_of_detected_frame_errors = self.__create_frame_error_dictionary()
             return dict_of_detected_frame_errors
 
         elif frames_per_second == 59.94:
@@ -46,9 +51,9 @@ class FrameErrorDetector(VideoScanner):
         else:
             raise Exception(str(frames_per_second) + ' is a not supported framerate or a typo.')
 
-    def __create_frame_error_dictionary_60_fps(self):
+    def __create_frame_error_dictionary(self):
         """
-        Detects frame errors for projects with a playback frame rate of 60FPS.
+        Detects frame errors for test cases that have a matching recording and playback framerate.
         :return: Returns a dictionary with all dropped or duplicated video frames.
         """
         dictionary_of_frame_errors = {}
@@ -67,10 +72,18 @@ class FrameErrorDetector(VideoScanner):
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
             occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
-            if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2:
-                time_code = calc_current_time_code(current_frame, frame_rate=59.94)
-                dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
+            occurrence_of_previous_frame = self.video_frame_scan_list.count(current_frame - 1)
+            occurrence_of_next_frame = self.video_frame_scan_list.count(current_frame + 1)
 
+            if occurrence_of_current_frame != 1:
+                if occurrence_of_current_frame == 2:
+                    if occurrence_of_previous_frame != 1 and occurrence_of_next_frame != 1 \
+                            and current_frame != self.expected_amount_of_frames and current_frame - 1 != 0:
+                        time_code = calc_current_time_code(current_frame, frame_rate=59.94)
+                        dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
+                else:
+                    time_code = calc_current_time_code(current_frame, frame_rate=59.94)
+                    dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
     def __create_frame_error_dictionary_50_fps(self):
@@ -116,11 +129,18 @@ class FrameErrorDetector(VideoScanner):
         dictionary_of_frame_errors = {}
         for current_frame in range(1, self.expected_amount_of_frames + 1):
             occurrence_of_current_frame = self.video_frame_scan_list.count(current_frame)
-            if occurrence_of_current_frame != 1 and occurrence_of_current_frame != 2 \
-                    and occurrence_of_current_frame != 3:
-                time_code = calc_current_time_code(current_frame, frame_rate=29.97)
-                dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
+            occurrence_of_previous_frame = self.video_frame_scan_list.count(current_frame - 1)
+            occurrence_of_next_frame = self.video_frame_scan_list.count(current_frame + 1)
 
+            if occurrence_of_current_frame != 2:
+                if occurrence_of_current_frame == 3:
+                    if occurrence_of_previous_frame != 2 and occurrence_of_next_frame != 2 \
+                            and current_frame != self.expected_amount_of_frames and current_frame - 1 != 0:
+                        time_code = calc_current_time_code(current_frame, frame_rate=29.97)
+                        dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
+                else:
+                    time_code = calc_current_time_code(current_frame, frame_rate=29.97)
+                    dictionary_of_frame_errors[current_frame] = (occurrence_of_current_frame, time_code)
         return dictionary_of_frame_errors
 
     def __create_frame_error_dictionary_25_fps(self):
