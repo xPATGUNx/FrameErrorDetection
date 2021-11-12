@@ -1,3 +1,4 @@
+import sys
 from Python.UserInterface import *
 
 app = QApplication(sys.argv)
