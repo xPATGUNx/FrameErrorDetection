@@ -1,4 +1,3 @@
-import sys
 import time
 from Python.TestFullRangeFrameDrops import test_for_frame_errors
 from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout, QDialog, QLabel, QComboBox,
@@ -32,7 +31,7 @@ class UserInterface(QDialog):
         self.recording_framerate_label = \
             QLabel('Capture framerate (to simulate a consumer display set this to \'60FPS\'):')
         self.recording_framerate = QComboBox()
-        self.recording_framerate.addItems(['60FPS', '59.94FPS', '50FPS', '30FPS', '29.97FPS', '25FPS', '24FPS'])
+        self.recording_framerate.addItems(['60', '59.94', '50', '30', '29.97', '25', '24'])
 
         self.recording_device_label = QLabel('Recording Device:')
         self.recording_device_bmd = QRadioButton('Blackmagic Design Intensity Pro 4k')
@@ -41,7 +40,8 @@ class UserInterface(QDialog):
         self.recording_device_elgato.toggled.connect(lambda: self.button_state(self.recording_device_elgato))
 
         self.playback_frame_rate_label = QLabel('Framerate of video playback:')
-        self.playback_frame_rate = QLineEdit('60')
+        self.playback_frame_rate = QComboBox()
+        self.playback_frame_rate.addItems(['Same as capture framerate', '60', '59.94', '50', '30', '29.97', '25', '24'])
 
         self.open_report_after_run_radio_button = QCheckBox('Open report after test run')
 
@@ -96,8 +96,17 @@ class UserInterface(QDialog):
             expected_frames = int(self.expected_frames.text())
             print(f'Exptected amount of Frames: {expected_frames}')
             recording_frame_rate = self.recording_framerate.currentText()
+            recording_profile = recording_frame_rate + 'FPS'
             print(f'Recording frame rate: {recording_frame_rate} FPS')
-            playback_frame_rate = int(self.playback_frame_rate.text())
+
+            if self.playback_frame_rate.currentText() == 'Same as capture framerate':
+                playback_frame_rate = 60
+                additional_recording_time = 15
+                recording_length = int(expected_frames / float(recording_frame_rate) + additional_recording_time)
+            else:
+                playback_frame_rate = float(self.playback_frame_rate.currentText())
+                additional_recording_time = 15
+                recording_length = int(expected_frames / playback_frame_rate + additional_recording_time)
             print(f'Playback frame rate: {playback_frame_rate}')
 
             if self.open_report_after_run_radio_button.isChecked() is True:
@@ -107,18 +116,17 @@ class UserInterface(QDialog):
 
             if self.recording_device_bmd.isChecked() is True:
                 print(f'Selected recording device: {self.recording_device_bmd.text()}')
-                recording_scene = f'BMD {playback_frame_rate} FPS'
-            if self.recording_device_elgato.isChecked() is True:
+                recording_scene = f'BMD {recording_frame_rate} FPS'
+            elif self.recording_device_elgato.isChecked() is True:
                 print(f'Selected recording device: {self.recording_device_elgato.text()}')
-                recording_scene = f'Elgato {playback_frame_rate} FPS'
-
-            additional_recording_time = 15
-            recording_length = int(expected_frames / playback_frame_rate + additional_recording_time)
+                recording_scene = f'Elgato {recording_frame_rate} FPS'
+            else:
+                raise Exception('No capture device could be selected. Please reboot the app.')
 
             test_for_frame_errors(name_of_test_run=test_name,
                                   video_directory_path=capture_path,
                                   expected_amount_of_frames=expected_frames,
-                                  recording_frame_rate=recording_frame_rate,
+                                  recording_frame_rate=recording_profile,
                                   recording_scene=recording_scene,
                                   playback_frame_rate=playback_frame_rate,
                                   recording_length=recording_length,
