@@ -1,3 +1,4 @@
+import obswebsocket.exceptions
 from obswebsocket import obsws, requests
 import time
 
@@ -24,7 +25,10 @@ class ObsController:
         """
         A function to connect with the OBS socket server.
         """
-        self.web_socket.connect()
+        try:
+            self.web_socket.connect()
+        except obswebsocket.exceptions.ConnectionFailure:
+            print('Failed to connect with OBS. Please restart the OBS-Websocket server.')
 
     def disconnect_with_obs(self):
         """
