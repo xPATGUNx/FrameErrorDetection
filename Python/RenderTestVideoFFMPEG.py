@@ -30,7 +30,7 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
                          f'-filter_complex "[0:v][1:v] ' \
                          f'overlay={qr_code_offset}:{qr_code_offset}" ' \
                          f'-profile:v {format_profile} -level:v {format_level} ' \
-                         f'{name_of_rendered_video} ' \
+                         f'"{name_of_rendered_video}" ' \
                          f'-vframes {total_amount_of_frames}'
 
         print(ffmpeg_command)
@@ -40,14 +40,13 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
         ffmpeg_command = f'ffmpeg -r {frame_rate} -i "{path_to_video}" ' \
                          f'-r {frame_rate} -i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png ' \
                          f'-filter_complex "[0:v][1:v] ' \
-                         f'overlay={qr_code_offset}:{qr_code_offset}" {name_of_rendered_video} ' \
+                         f'overlay={qr_code_offset}:{qr_code_offset}" "{name_of_rendered_video}" ' \
                          f'-vframes {total_amount_of_frames}'
 
         print(ffmpeg_command)
         pass_command(ffmpeg_command)
 
     print('Video render done.')
-    print(f'Location of rendered video: Frame Drop Detection/{name_of_rendered_video}')
 
 
 def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000,
@@ -68,10 +67,11 @@ def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_o
 
     ffmpeg_command = f'ffmpeg -r {frame_rate} -f image2 -s {resolution}x{resolution} ' \
                      f'-i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png -vframes {total_amount_of_frames} ' \
-                     f'-vcodec libx264 -crf 25 -pix_fmt yuv420p {path_to_video}'
+                     f'-vcodec libx264 -crf 25 -pix_fmt yuv420p "{path_to_video}"'
 
     print(ffmpeg_command)
     pass_command(ffmpeg_command)
+    print('Video render done.')
 
 
 def pass_command(cmd_line: str):
