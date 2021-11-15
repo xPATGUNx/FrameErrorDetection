@@ -22,14 +22,15 @@ class VideoRenderUI(QDialog):
         self.qr_offset_label = QLabel('Offset of QR code location:')
         self.qr_offset = QLineEdit('20')
 
+        self.render_video_disclaimer = QLabel(f'Rendered video will be saved to the same location as the original.')
         self.start_render_button = QPushButton('Render Video!')
 
         self.render_qr_clip_label = QLabel('Render QR Code Clip')
         self.video_title_label = QLabel('Enter video title:')
         self.video_title = QLineEdit('QR Code Video Clip')
-        self.save_path_label = QLabel('Enter save location:')
-        self.save_path = QLineEdit(r'D:/Test Videos')
-        self.save_path_select_button = QPushButton('Select File')
+        self.qr_save_path_label = QLabel('Enter save location:')
+        self.qr_save_path = QLineEdit(r'D:/Test Videos')
+        self.qr_save_path_select_button = QPushButton('Select File')
 
         self.qr_frame_rate_label = QLabel('Framerate of clip:')
         self.qr_frame_rate = QComboBox()
@@ -51,6 +52,7 @@ class VideoRenderUI(QDialog):
         layout.addWidget(self.frame_rate)
         layout.addWidget(self.qr_offset_label)
         layout.addWidget(self.qr_offset)
+        layout.addWidget(self.render_video_disclaimer)
         layout.addWidget(self.start_render_button)
         layout.addWidget(QHLine())
         layout.addWidget(QHLine())
@@ -58,9 +60,9 @@ class VideoRenderUI(QDialog):
         layout.addWidget(QHLine())
         layout.addWidget(self.video_title_label)
         layout.addWidget(self.video_title)
-        layout.addWidget(self.save_path_label)
-        layout.addWidget(self.save_path)
-        layout.addWidget(self.save_path_select_button)
+        layout.addWidget(self.qr_save_path_label)
+        layout.addWidget(self.qr_save_path)
+        layout.addWidget(self.qr_save_path_select_button)
         layout.addWidget(self.qr_frame_rate_label)
         layout.addWidget(self.qr_frame_rate)
         layout.addWidget(self.amount_of_frames_label)
@@ -72,7 +74,7 @@ class VideoRenderUI(QDialog):
         # Add button signal to greetings slot
         self.start_render_button.clicked.connect(self.execute_video_render)
         self.report_file_select_button.clicked.connect(self.select_file)
-        self.save_path_select_button.clicked.connect(self.select_dir)
+        self.qr_save_path_select_button.clicked.connect(self.select_dir_qr)
         self.qr_render_button.clicked.connect(self.execute_qr_code_clip_render)
 
     def execute_video_render(self):
@@ -86,7 +88,7 @@ class VideoRenderUI(QDialog):
 
     def execute_qr_code_clip_render(self):
         video_title = self.video_title.text()
-        save_path = self.save_path.text() + '/' + video_title + '.mp4'
+        save_path = self.qr_save_path.text() + '/' + video_title + '.mp4'
         frame_rate = float(self.qr_frame_rate.currentText())
         total_frames = int(self.amount_of_frames.text())
         render_qr_code_clip(path_to_video=save_path, frame_rate=frame_rate, total_amount_of_frames=total_frames)
@@ -100,9 +102,9 @@ class VideoRenderUI(QDialog):
         directory = dialog.getOpenFileName(parent=self, caption='Open file', dir='.', filter='*.mp4')
         self.path_to_video.setText(str(directory[0]))
 
-    def select_dir(self):
+    def select_dir_qr(self):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        self.save_path.setText(directory)
+        self.qr_save_path.setText(directory)
 
 
 class QHLine(QFrame):

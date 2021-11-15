@@ -17,7 +17,9 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
     total_amount_of_frames = get_total_amount_of_frames_from_video(path_to_video)
     amount_of_leading_zeros = len(str(total_amount_of_frames))
     base_name = os.path.basename(path_to_video)
-    name_of_rendered_video = f'Rendered_Videos/qr_test_vid_{total_amount_of_frames}_frames_{frame_rate}fps_{base_name}'
+    path_string_without_extention = os.path.splitext(path_to_video)[0]
+    name_of_rendered_video = \
+        f'{path_string_without_extention}_FED_{total_amount_of_frames}_frames_{frame_rate}fps_{base_name}'
     if os.path.exists(name_of_rendered_video):
         os.remove(name_of_rendered_video)
 
