@@ -1,7 +1,7 @@
 import time
 from Python.TestFullRangeFrameDrops import test_for_frame_errors
 from PySide6.QtWidgets import (QLineEdit, QPushButton, QApplication, QVBoxLayout, QDialog, QLabel, QComboBox,
-                               QRadioButton, QCheckBox, QFileDialog)
+                               QRadioButton, QCheckBox, QFileDialog, QFrame)
 
 
 class UserInterface(QDialog):
@@ -14,6 +14,11 @@ class UserInterface(QDialog):
         """
         super(UserInterface, self).__init__(parent)
         # Create widgets
+        self.test_disclaimer = QLabel('Before testing make sure OBS is running.\n'
+                                      'To connect with the Frame Error Detection system set the OBS-WebSocket-Server\n'
+                                      'to following settings:\n'
+                                      'Server Port: 4444\n'
+                                      'Password: Steinberg\n')
         self.test_run_name_label = QLabel('Name/Tag of test run:')
         self.test_run_name = QLineEdit('FED Test Run')
 
@@ -39,7 +44,8 @@ class UserInterface(QDialog):
         self.recording_device_elgato = QRadioButton('Elgato Game Capture 4k60 Pro')
         self.recording_device_elgato.toggled.connect(lambda: self.button_state(self.recording_device_elgato))
 
-        self.playback_frame_rate_label = QLabel('Framerate of video playback:')
+        self.playback_frame_rate_label = \
+            QLabel('Framerate of video playback (change this setting only for consumer test case):')
         self.playback_frame_rate = QComboBox()
         self.playback_frame_rate.addItems(['Same as capture framerate', '60', '59.94', '50', '30', '29.97', '25', '24'])
 
@@ -49,6 +55,8 @@ class UserInterface(QDialog):
 
         # Create layout and add widgets
         layout = QVBoxLayout()
+        layout.addWidget(self.test_disclaimer)
+        layout.addWidget(QHLine())
         layout.addWidget(self.test_run_name_label)
         layout.addWidget(self.test_run_name)
         layout.addWidget(self.report_path_label)
@@ -160,3 +168,10 @@ class UserInterface(QDialog):
         elif button.text() == 'Elgato Game Capture 4k60 Pro':
             if button.isChecked():
                 self.recording_device_bmd.setChecked(False)
+
+
+class QHLine(QFrame):
+    def __init__(self):
+        super(QHLine, self).__init__()
+        self.setFrameShape(QFrame.HLine)
+        self.setFrameShadow(QFrame.Sunken)
