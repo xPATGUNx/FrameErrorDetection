@@ -42,7 +42,7 @@ class ObsController:
         :param record_duration: an integer that specifies the duration of recording in seconds.
         """
         self.web_socket.call(requests.StartRecording())
-        print('Start of recording.')
+        print('Start of recording.\nStart the playback now!')
         time.sleep(record_duration)
         self.web_socket.call(requests.StopRecording())
         print('End of recording.')
