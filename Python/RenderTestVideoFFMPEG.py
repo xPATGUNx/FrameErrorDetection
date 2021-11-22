@@ -4,49 +4,50 @@ import subprocess
 from Python.QRCodeTools import generate_qr_codes, delete_generated_qr_codes
 
 
-def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: int, format_profile: str = None,
-                      format_level: str = None):
+def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: int, codec: str = 'H264',
+                      bit_rate: int = 20):
     """
     Dedicated function to render test videos for Frame Error Detection including a QR Code via a FFMPEG command call.
     :param path_to_video: string of video path.
     :param frame_rate: float value of the playback frame rate of the selected video.
     :param qr_code_offset: An integer value that sets the offset of the qr code position.
-    :param format_profile: A string of the specified format profile of H264.
-    :param format_level: A string of the specified format level of H264.
     """
     total_amount_of_frames = get_total_amount_of_frames_from_video(path_to_video)
     amount_of_leading_zeros = len(str(total_amount_of_frames))
     base_name = os.path.basename(path_to_video)
+    file_extention = os.path.splitext(base_name)[1]
     path_string_without_extention = os.path.splitext(path_to_video)[0]
     name_of_rendered_video = \
-        f'{path_string_without_extention}_FED_{total_amount_of_frames}_frames_{frame_rate}fps_{base_name}'
+        f'{path_string_without_extention}_FED_{total_amount_of_frames}_frames_{frame_rate}fps_{file_extention}'
     if os.path.exists(name_of_rendered_video):
         os.remove(name_of_rendered_video)
 
     delete_generated_qr_codes()
     generate_qr_codes(total_amount_of_frames)
 
-    if format_profile and format_level is not None:
-        ffmpeg_command = f'ffmpeg -r {frame_rate} -i "{path_to_video}" ' \
-                         f'-r {frame_rate} -i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png ' \
-                         f'-filter_complex "[0:v][1:v] ' \
-                         f'overlay={qr_code_offset}:{qr_code_offset}" ' \
-                         f'-profile:v {format_profile} -level:v {format_level} ' \
-                         f'"{name_of_rendered_video}" ' \
-                         f'-vframes {total_amount_of_frames}'
+    codec_setting_h264_high = f'-c:v libx264 -profile:v high -level:v 6.2 -b:v {bit_rate}M'
+    codec_setting_h264_lossless = f'-c:v libx264 -crf 12 -b:v {bit_rate}M'
+    codec_setting_prores = f'-c:v prores -profile:v 4 -bits_per_mb 8000 -pix_fmt yuv444p10le -b:v {bit_rate}M'
+    codec_setting_dnxhd = f'-c:v dnxhd -b:v {bit_rate}M'
 
-        print(ffmpeg_command)
-        pass_command(ffmpeg_command)
+    if codec == 'H264':
+        codec_setting = codec_setting_h264_high
+    elif codec == 'H264 Lossless':
+        codec_setting = codec_setting_h264_lossless
+    elif codec == 'ProRes':
+        codec_setting = codec_setting_prores
+    elif codec == 'DNxHD':
+        codec_setting = codec_setting_dnxhd
 
-    else:
-        ffmpeg_command = f'ffmpeg -r {frame_rate} -i "{path_to_video}" ' \
-                         f'-r {frame_rate} -i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png ' \
-                         f'-filter_complex "[0:v][1:v] ' \
-                         f'overlay={qr_code_offset}:{qr_code_offset}" "{name_of_rendered_video}" ' \
-                         f'-vframes {total_amount_of_frames}'
+    ffmpeg_command = f'ffmpeg -r {frame_rate} -i "{path_to_video}" ' \
+                     f'-r {frame_rate} -i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png ' \
+                     f'-filter_complex "[0:v][1:v] ' \
+                     f'overlay={qr_code_offset}:{qr_code_offset}" ' \
+                     f'{codec_setting} "{name_of_rendered_video}" ' \
+                     f'-vframes {total_amount_of_frames}'
 
-        print(ffmpeg_command)
-        pass_command(ffmpeg_command)
+    print(ffmpeg_command)
+    pass_command(ffmpeg_command)
 
     print('Video render done.')
 
