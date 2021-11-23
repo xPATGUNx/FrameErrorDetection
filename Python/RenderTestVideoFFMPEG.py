@@ -53,7 +53,7 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
 
 
 def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000,
-                        scale_of_qr_code_image: int = 40):
+                        scale_of_qr_code_image: int = 40, remove_images:bool = True):
     """
     Function to call a FFMPEG command to render a video clip of a QR Code sequence.
     :param path_to_video: A string to the directory where you want to save the video to.
@@ -65,8 +65,9 @@ def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_o
     amount_of_leading_zeros = len(str(total_amount_of_frames))
     if os.path.exists(path_to_video):
         os.remove(path_to_video)
-    delete_generated_qr_codes()
-    generate_qr_codes(total_amount_of_frames, img_scale=scale_of_qr_code_image)
+    if remove_images:
+        delete_generated_qr_codes()
+        generate_qr_codes(total_amount_of_frames, img_scale=scale_of_qr_code_image)
 
     ffmpeg_command = f'ffmpeg -r {frame_rate} -f image2 -s {resolution}x{resolution} ' \
                      f'-i Images/QR_Code_Frame_%0{amount_of_leading_zeros}d.png -vframes {total_amount_of_frames} ' \
