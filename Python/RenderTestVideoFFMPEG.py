@@ -6,8 +6,11 @@ from Python.QRCodeTools import generate_qr_codes, delete_generated_qr_codes
 
 def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: int, codec: str = 'H264',
                       bit_rate: int = 20):
+    # TODO : Update Pydoc
     """
     Dedicated function to render test videos for Frame Error Detection including a QR Code via a FFMPEG command call.
+    :param codec:
+    :param bit_rate:
     :param path_to_video: string of video path.
     :param frame_rate: float value of the playback frame rate of the selected video.
     :param qr_code_offset: An integer value that sets the offset of the qr code position.
@@ -54,8 +57,10 @@ def render_test_video(path_to_video: str, *, frame_rate: float, qr_code_offset: 
 
 def render_qr_code_clip(path_to_video: str, *, frame_rate: float, total_amount_of_frames: int, resolution: int = 1000,
                         scale_of_qr_code_image: int = 40, remove_images:bool = True):
+    # TODO : Update Pydoc
     """
     Function to call a FFMPEG command to render a video clip of a QR Code sequence.
+    :param remove_images:
     :param path_to_video: A string to the directory where you want to save the video to.
     :param frame_rate: A float value to set the frame rate of the video clip.
     :param total_amount_of_frames: An integer value to set the total amount of to be created QR-Codes/Frames.
