@@ -14,7 +14,6 @@ class FrameErrorDetector(VideoScanner):
     def frame_error_detection_for_consumer_case(self, *, crop_video: bool = True, frames_per_second: float = 60):
         """
         Core function to detect frame drops & frame duplicates in a video file.
-        The validation of 59 and 29 fps needs further evaluation. For now it is seen as equal to either 60 or 30 fps.
         :param frames_per_second: Set this float value equal to the frame rate of the playback video.
         :param crop_video: A boolean that toggles if the video is cropped to contain only the QR Code.
         Enabling this will significantly improve scan speed.
